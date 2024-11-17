@@ -9,6 +9,7 @@ export function Formulaire() {
     const [priorite, setPriorite] = useState('');
     const [description, setDescription] = useState('');
     const [fichier, setFichier] = useState('');
+    const [commentaire, setCommentaire] = useState('');
 
     const handleSubmit = async (e) => {
 
@@ -53,6 +54,16 @@ export function Formulaire() {
                         type="file"
                         name="fichier"
                         onChange={(e) => setFichier(e.target.files[0])}
+                    />
+                </div>
+                <div className="input-group">
+                    <label>Champ de Commentaire</label>
+                    <input
+                        type="text"
+                        name="commentaire"
+                        value={commentaire}
+                        onChange={(e) => setCommentaire(e.target.value)}
+                        required
                     />
                 </div>
             </form>

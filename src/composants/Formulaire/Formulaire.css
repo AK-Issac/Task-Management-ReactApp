@@ -53,31 +53,3 @@
   .submit-btn:hover {
     background-color: #0056b3;
   }
-  
-  .social-auth {
-    margin-top: 20px;
-  }
-  
-  .social-auth button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .google-btn {
-    background-color: #4285F4;
-    color: white;
-  }
-  
-  .github-btn {
-    background-color: #333;
-    color: white;
-  }
-  
-  button:hover {
-    opacity: 0.8;
-  }
-  
