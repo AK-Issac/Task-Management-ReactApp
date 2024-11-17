@@ -115,7 +115,8 @@ function Connexion() {
   };
 
   return (
-    <main className="container">
+    <main className='Connexion'>
+    <div className="container">
       <button className="toggle-button" onClick={toggleForm}>
         {isLogin ? "Switch to Signup" : "Switch to Login"}
       </button>
@@ -242,6 +243,7 @@ function Connexion() {
           </div>
         </div>
       </div>
+    </div>
     </main>
   );
 }
