@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
-.Connexion * {
+* {
     margin: 0;
     border: 0;
     padding: 0;
@@ -8,7 +8,7 @@
     font-family: "Poppins", sans-serif;
 }
 
-.Connexion .body {
+.body {
     background: linear-gradient(45deg, #8e2de2, #4a00e0) no-repeat;
     min-height: 100vh;
     min-width: 100vw;
@@ -17,20 +17,21 @@
     justify-content: center;
 }
 
-.Connexion main.container {
+main.container {
     background: white;
-    max-height: 80vh;
-    overflow-y: auto;
+    max-height: 80vh; /* Sets max height to 80% of the viewport */
+    overflow-y: auto; /* Enables vertical scrolling if content exceeds height */
     min-width: 320px;
     min-height: 40vh;
     padding: 2rem;
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     width: 100%;
-    max-width: 500px;
+    max-width: 500px; /* Centers and limits container width */
 }
 
-.Connexion .toggle-button {
+/* Toggle Button Styles */
+.toggle-button {
     background-color: #8e54e9;
     color: white;
     padding: 0.5rem 1rem;
@@ -42,28 +43,30 @@
     margin-bottom: 1rem;
 }
 
-.Connexion .toggle-button:hover {
+.toggle-button:hover {
     background-color: #4776E6;
 }
 
-.Connexion .form {
+/* Smooth transition for the form switch */
+.form {
     opacity: 1;
     transform: scale(1);
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.Connexion .form.hidden {
+.form.hidden {
     opacity: 0;
     transform: scale(0.95);
-    display: none;
+    display: none; /* Completely hide the inactive form */
 }
 
-.Connexion .form.signup {
+.form.signup {
     opacity: 0;
     transform: scale(0.95);
 }
 
-.Connexion main h2 {
+/* Header and Title */
+main h2 {
     font-weight: 600;
     margin-bottom: 2rem;
     position: relative;
@@ -71,7 +74,7 @@
     transition: all 0.3s ease;
 }
 
-.Connexion main h2::before {
+main h2::before {
     content: '';
     position: absolute;
     height: 4px;
@@ -82,20 +85,20 @@
     background: linear-gradient(45deg, #8e2de2, #4a00e0);
 }
 
-.Connexion form {
+form {
     display: flex;
     flex-direction: column;
 }
 
-.Connexion .input-field {
+.input-field {
     position: relative;
 }
 
-.Connexion form .input-field:first-child {
+form .input-field:first-child {
     margin-bottom: 1.5rem;
 }
 
-.Connexion .input-field .underline::before {
+.input-field .underline::before {
     content: '';
     position: absolute;
     height: 1px;
@@ -105,7 +108,7 @@
     background: rgba(0, 0, 0, 0.2);
 }
 
-.Connexion .input-field .underline::after {
+.input-field .underline::after {
     content: '';
     position: absolute;
     height: 1px;
@@ -118,11 +121,11 @@
     transform-origin: left;
 }
 
-.Connexion .input-field input:focus ~ .underline::after {
+.input-field input:focus ~ .underline::after {
     transform: scaleX(1);
 }
 
-.Connexion .input-field input {
+.input-field input {
     outline: none;
     background-color: aliceblue;
     font-size: 0.9rem;
@@ -130,11 +133,11 @@
     width: 100%;
 }
 
-.Connexion .input-field input::placeholder {
+.input-field input::placeholder {
     color: rgba(8, 7, 7, 0.5);
 }
 
-.Connexion form input[type="submit"] {
+form input[type="submit"] {
     margin-top: 2rem;
     padding: 0.4rem;
     width: 100%;
@@ -147,24 +150,24 @@
     transition: all 0.3s ease;
 }
 
-.Connexion form input[type="submit"]:hover {
+form input[type="submit"]:hover {
     letter-spacing: 0.5px;
     background: linear-gradient(to right, #4776E6, #8e54e9);
 }
 
-.Connexion .footer {
+.footer {
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
 }
 
-.Connexion .footer span {
+.footer span {
     color: rgba(0, 0, 0, 0.7);
     font-size: 0.8rem;
     text-align: center;
 }
 
-.Connexion .footer .social-field {
+.footer .social-field {
     padding: 0.4rem;
     border-radius: 4px;
     font-size: 0.85rem;
@@ -173,20 +176,20 @@
     margin-top: 1rem;
 }
 
-.Connexion .footer .social-field a i {
+.footer .social-field a i {
     margin: 0 0.5rem;
     width: 15px;
 }
 
-.Connexion .footer .social-field a {
+.footer .social-field a {
     text-decoration: none;
     color: white;
 }
 
-.Connexion .footer .social-field.github {
+.footer .social-field.github {
     background: linear-gradient(to right, #333, #000);
 }
 
-.Connexion .footer .social-field.google {
+.footer .social-field.google {
     background: linear-gradient(to right, #4285F4, #EA4335);
-}
+} 
