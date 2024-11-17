@@ -1,9 +1,9 @@
 // src/pages/Connexion.jsx
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
-import { auth, googleProvider, facebookProvider } from '../../Firebase';
+import { auth, googleProvider, facebookProvider } from '../../../Firebase';
 import { Link } from 'react-router-dom';
-import HumanVerification from '../Recaptcha';  // Adjust the path if needed
+import HumanVerification from '../../Recaptcha';  // Adjust the path if needed
 import "./Login.css";
 
 const Connexion = () => {

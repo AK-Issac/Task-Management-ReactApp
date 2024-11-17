@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { auth, db } from "../../Firebase";
+import { auth, db } from "../../../Firebase";
 import { doc, setDoc } from "firebase/firestore";
-import HumanVerification from '../Recaptcha';  // Adjust path if necessary
+import HumanVerification from '../../Recaptcha';  // Adjust path if necessary
 import "./Register.css";
 
 const Register = () => {
