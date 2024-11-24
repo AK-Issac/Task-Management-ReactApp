@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { db, auth } from "./firebase"; // Import Firebase config
+import { db, auth } from "../../../Firebase"; // Import Firebase config
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import './Formulaire.css'
+import settings from '../../assets/settings.svg';
 
 export function Formulaire() {
   const [titre, setTitre] = useState('');
@@ -12,6 +13,7 @@ export function Formulaire() {
   const [fichier, setFichier] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [user, setUser] = useState(null);
 
   const handleFileChange = (e) => {
     setFichier(e.target.files[0]);
@@ -64,8 +66,18 @@ export function Formulaire() {
     }
   };
 
+  const redirectProfile = () => {
+    window.location.href = '/profile';
+  };
+
   return (
     <div className="formulaire-container">
+      <div className="social-buttons">
+        <div className="social-button" onClick={redirectProfile}>
+          <img src={settings} alt="Profile" className="profile-avatar" />
+          <span className="profile-name">{user?.displayName || "User"}</span>
+        </div>
+      </div>
       <h2>Formulaire de soumission de Tâche</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
