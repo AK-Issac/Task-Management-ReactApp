@@ -28,6 +28,13 @@
   margin-top: 5px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  background-color: cornsilk;
+  color: black;
+}
+
+.form-group textarea {
+  background-color: cornsilk;
+  color: black;
 }
 
 button {
