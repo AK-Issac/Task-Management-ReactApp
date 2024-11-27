@@ -6,7 +6,6 @@ import { auth, db } from '../../../Firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { sendEmailVerification, createUserWithEmailAndPassword } from 'firebase/auth';
 
-
 export function SignUp() {
     const [role, setRole] = useState("Community"); // Rôle par défaut
     const [email, setEmail] = useState("");
@@ -16,7 +15,6 @@ export function SignUp() {
     const [dateNaissance, setDateNaissance] = useState("");
     const [gender, setGender] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    //const [photo, setPhoto] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [captchaVerified, setCaptchaVerified] = useState(false);
 
@@ -29,65 +27,49 @@ export function SignUp() {
             setErrorMessage('Les mots de passe ne correspondent pas');
             return;
         }
-    
+
         if (!captchaVerified) {
             setErrorMessage('Veuillez compléter le CAPTCHA');
             return;
-        }    
+        }
 
         // Validation basique pour l'exemple
-        if (!email || !password) {
+        if (!email || !password || !name || !birthName || !dateNaissance || !gender) {
             setErrorMessage("Veuillez remplir tous les champs.");
-        } else {
-            setErrorMessage(""); // Réinitialise le message d'erreur
-            console.log("Connexion avec :", { email, password });
-            // Ajouter ici la logique de connexion (API, Firebase, etc.)
+            return;
         }
+
+        setErrorMessage(""); // Réinitialise le message d'erreur
+        console.log("Inscription avec :", { email, password, name, birthName, dateNaissance, gender });
 
         try {
             // Création de l'utilisateur
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            const userRef = doc(db, "users", user.uid);
-      
-            /*await userRef.set({
-            email: user.email,
-            role: role, // ou "admin" pour un administrateur
-            });*/
+            // Référence Firestore avec l'UID de l'utilisateur
+            const userRef = doc(db, "users", user.uid); // L'UID est utilisé ici comme identifiant
+
+            // Enregistrement des informations de l'utilisateur dans Firestore
             await setDoc(userRef, {
                 prenom: name,
                 nom: birthName,
                 dateNaissance: dateNaissance,
                 genre: gender,
                 email: user.email,
-                role: role
+                role: role,
+                uid: user.uid, // Ajout de l'UID dans Firestore
             });
 
+            // Envoi d'une vérification par e-mail
             await sendEmailVerification(user);
             alert(`Inscription réussie en tant que ${role}! Veuillez vérifier votre e-mail pour la confirmation.`);
 
-            
-
-            // Téléchargement de la photo si fournie
-            /*let photoURL = null;
-            if (photo) {
-                const storageRef = ref(storage, `profile_pictures/${userCredential.user.uid}/${photo.name}`);
-                await uploadBytes(storageRef, photo);
-                photoURL = await getDownloadURL(storageRef);
-            }*/
-    
-            // Mise à jour du profil de l'utilisateur avec le nom et la photo
-            /*await updateProfile(userCredential.user, {
-                displayName: username,
-                photoURL: photoURL
-            });*/
-
-            navigate('/home')
+            navigate('/home'); // Redirection vers la page d'accueil après l'inscription
         } catch (err) {
             setErrorMessage(err.message);
             alert(`Erreur durant la création du compte: ${err.message}`);
-        }    
+        }
     };
 
     const handleCaptchaChange = (value) => setCaptchaVerified(value !== null);
@@ -138,7 +120,7 @@ export function SignUp() {
                                     <label htmlFor="name">Prénom</label>
                                     <input
                                         className="form_input"
-                                        type="name"
+                                        type="text"
                                         name="name"
                                         id="name"
                                         required
@@ -231,7 +213,7 @@ export function SignUp() {
                                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                             </form>
 
-                            <p className='Direction_SignUp'>Vous avez deja un compte?<Link to="/connexion"> Cliquez-ici </Link></p>
+                            <p className='Direction_SignUp'>Vous avez déjà un compte? <Link to="/connexion">Cliquez-ici</Link></p>
                         </div>
                     </div>
                 </div>
