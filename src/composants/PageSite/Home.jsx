@@ -13,22 +13,36 @@ export function Home() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Vérification du rôle de l'utilisateur connecté
-        const fetchUserRole = async () => {
-            if (auth.currentUser) {
+        if (!auth.currentUser) {
+            navigate('/'); // Redirige vers la page de login si l'utilisateur n'est pas authentifié
+        } else {
+            // Vérification du rôle de l'utilisateur connecté
+            const fetchUserRole = async () => {
                 const userRef = doc(db, "users", auth.currentUser.uid);
                 const userDoc = await getDoc(userRef);
                 if (userDoc.exists()) {
                     setUserRole(userDoc.data().role);
                 }
-            }
-        };
-        fetchUserRole();
-    }, []);
+            };
+            fetchUserRole();
+        }
+    }, [navigate]);
 
-    // Navigation vers la page des tâches de l'utilisateur (Community)
+    // Fonctions de navigation
+    const handleViewStudents = () => {
+        navigate('/students'); // Redirige vers la page des étudiants
+    };
+
     const handleViewTasks = () => {
-        navigate('/tasks'); // Assurez-vous que la route "/tasks" est définie
+        navigate('/tasks'); // Redirige vers la page des tâches
+    };
+
+    const handleViewTeachers = () => {
+        navigate('/teachers'); // Redirige vers la page des enseignants
+    };
+
+    const handleViewProfile = () => {
+        navigate('/profile'); // Redirige vers la page du profil
     };
 
     return (
@@ -38,32 +52,32 @@ export function Home() {
             </div>
             <div className='Header_Home'>
                 <div className='Students'>
-                    <button className='btn_Students' type='button'>
+                    <button className='btn_Students' type='button' onClick={handleViewStudents}>
                         <img className='img_Students' src={Student} alt='Students' />
                         <p className='text_Students'>Students</p>
                     </button>
                 </div>
                 <div className='Tasks'>
-                    <button className='btn_Tasks' type='button'>
+                    <button className='btn_Tasks' type='button' onClick={handleViewTasks}>
                         <img className='img_Tasks' src={Task} alt='Tasks' />
                         <p className='text_Tasks'>Tasks</p>
                     </button>
                 </div>
                 <div className='Teachers'>
-                    <button className='btn_Teachers' type='button'>
+                    <button className='btn_Teachers' type='button' onClick={handleViewTeachers}>
                         <img className='img_Teachers' src={Teacher} alt='Teachers' />
                         <p className='text_Teachers'>Teachers</p>
                     </button>
                 </div>
                 <div className='Profile'>
-                    <button className='btn_Profile' type='button'>
+                    <button className='btn_Profile' type='button' onClick={handleViewProfile}>
                         <img className='img_Profile' src={Profile} alt='Profile' />
                         <p className='text_Profile'>Profile</p>
                     </button>
                 </div>
             </div>
             <div className='Home_Information'>
-                {userRole === 'admin' ? (
+                {userRole === 'Admin' ? (
                     <>
                         <h1>Ajoutez un élève ou une tâche pour profiter pleinement de notre site !</h1>
                         <div className='btn_Home'>
@@ -71,7 +85,7 @@ export function Home() {
                             <button className='add-task' type='button'>Ajouter une nouvelle tâche</button>
                         </div>
                     </>
-                ) : userRole === 'community' ? (
+                ) : userRole === 'Community' ? (
                     <>
                         <h1>Regardez vos tâches présentes</h1>
                         <div className='btn_Home'>

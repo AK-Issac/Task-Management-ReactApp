@@ -44,7 +44,7 @@ export function Login() {
                 const userData = userDoc.data();
                 const userRole = userData.role;
     
-                if (role == userRole) {
+                if (role === userRole) {
                     alert("Compte connecté avec succès! Bienvenue!");
                     navigate('/home');
                 } else {
