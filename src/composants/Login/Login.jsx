@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from "../../../Firebase"
+import { auth, db } from "../../../Firebase"
+import { doc, getDoc } from "firebase/firestore";
 
 export function Login() {
     const [role, setRole] = useState("Community"); // Rôle par défaut
@@ -32,9 +33,26 @@ export function Login() {
         }    
 
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            alert("Compte connecté avec succès!");
-            navigate('/home');
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Récupération du document utilisateur depuis Firestore
+            const userDocRef = doc(db, "users", user.uid); // Référence au document
+            const userDoc = await getDoc(userDocRef); 
+            
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const userRole = userData.role;
+    
+                if (role == userRole) {
+                    alert("Compte connecté avec succès! Bienvenue!");
+                    navigate('/home');
+                } else {
+                    throw new Error("Rôle utilisateur non reconnu");
+                }
+            } else {
+                throw new Error("Utilisateur introuvable dans Firestore");
+            }
         } catch (err) {
             setErrorMessage('Erreur de connexion. Vérifiez vos informations.');
             console.error(err);
