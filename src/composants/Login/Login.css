@@ -1,0 +1,293 @@
+/* Fond de la page */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+body {
+    background-image: url('../../assets/login.jpg');
+    background-size: cover;
+    background-position-x: left;
+    height: 100%;
+    min-height: 300px;
+    margin: 0;
+}
+
+/* Conteneur principal */
+.Login_App {
+    display: flex; /* Crée une disposition en ligne */
+    justify-content: flex-end; /* Aligne les enfants à droite */
+    align-items: stretch; /* Aligne les enfants en hauteur */
+    width: 100vw; /* Largeur totale de la fenêtre */
+    height: 100vh; /* Hauteur totale de la fenêtre */
+    overflow: hidden; /* Évite les débordements */
+}
+
+/* Conteneur à droite */
+.Element_Right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px; /* Largeur fixe */
+    background-color: rgba(255, 255, 255, 0.88); /* Fond semi-transparent */
+    height: 100vh;
+    transform: translateZ(0);
+    overflow-y: auto; /* Défilement vertical si nécessaire */
+    overflow-x: hidden;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Ombre pour démarquer */
+}
+
+/* En-tête */
+.Header_Login {
+    padding: 60px 0 0;
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 75px;
+}
+
+.Element_Header_Login {
+    width: 100%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+    min-height: 0;
+    float: left;
+    box-sizing: border-box;
+    padding: 0 .75rem;
+}
+
+.Element_Header_Login_Precis {
+    background-size: 73px;
+    background-image: url("../../assets/logo.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 90px;
+    width: 280px;
+    height: 75px;
+}
+
+.Titre_Header {
+    position: relative;
+    font-size: 3.2rem;
+    line-height: 3.2rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif; /* Application de la nouvelle police */
+    letter-spacing: -1.5px;
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.Border_Header {
+    height: 1px;
+    background-color: #4caf50;
+    margin-left: 3px;
+    margin-right: -1px;
+}
+
+.Subtitle_Header {
+    letter-spacing: .4px;
+    line-height: 1.3em;
+    font-size: 1.14rem;
+    margin-left: 3px;
+    max-width: 280px;
+    font-family: 'Poppins', sans-serif; /* Application de la nouvelle police */
+}
+
+.Subtitle_Title_Header {
+    color: #0277ca;
+}
+
+/* Conteneur du formulaire */
+.Container_Login {
+    flex-grow: 1;
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-self: stretch;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+/* Boîte de connexion */
+.Box_login {
+    width: 100%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+    min-height: 0;
+    float: left;
+    box-sizing: border-box;
+    padding: 0 !important;
+}
+
+/* Section de login */
+.Section_Login {
+    min-height: 380px;
+}
+
+/* Boutons de rôle */
+.Btn_Role_Login {
+    height: 55px;
+    border-radius: 27.5px;
+    letter-spacing: .5px;
+    margin-left: 20%;
+    width: 60%;
+    margin-bottom: 1rem;
+    margin-right: 10px;
+    border-width: 2px;
+    font-size: 1.2rem;
+    line-height: 1.3rem;
+    border-style: solid;
+    border-color: midnightblue;
+    text-align: center;
+    display: flex;
+    gap: 10px; /* Espacement entre les boutons */
+}
+
+/* Boutons de rôle */
+.role-button {
+    border-radius: 27.5px;
+    padding: 10px 20px;
+    border: 2px solid black;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.88);
+    font-weight: 500;
+    letter-spacing: .4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    flex: 1; /* Tous les boutons occupent la même proportion d'espace */
+    text-align: center;
+    box-sizing: border-box; /* Inclut les bordures dans les dimensions */
+    min-height: 50px; /* Hauteur uniforme pour tous les boutons */
+    font-family: 'Poppins', sans-serif; /* Application de la nouvelle police */
+}
+
+/* Effet de survol */
+.role-button:hover {
+    background-color: midnightblue;
+    color: #fff;
+}
+
+/* Bouton actif */
+.role-button.active {
+    background-color: royalblue;
+    color: #fff;
+    border-color: black;
+}
+
+/* Formulaire : centre le formulaire dans la page */
+.Section_Form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre horizontalement */
+    justify-content: center; /* Centre verticalement */
+    width: 100%;
+    max-width: 400px; /* Largeur maximale du formulaire */
+    margin: 0 auto; /* Centre horizontalement avec le parent */
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.88); /* Fond semi-transparent */
+    border-radius: 8px; /* Bords arrondis */
+}
+
+/* Groupes de champs : espacement entre les champs */
+.Form_group {
+    width: 100%; /* Champs prennent toute la largeur */
+    margin-bottom: 1.5rem; /* Espacement vertical entre les groupes */
+}
+
+/* Labels des champs */
+.Form_group label {
+    display: block; /* Bloque le label pour qu’il s’aligne bien au-dessus du champ */
+    font-size: 1rem;
+    color: midnightblue;
+    font-weight: 500;
+    margin-bottom: 0.5rem; /* Espace entre le label et l'input */
+    font-family: 'Poppins', sans-serif; /* Application de la nouvelle police */
+}
+
+/* Champs d'entrée */
+.form_input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 2px solid midnightblue;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.88); /* Fond semi-transparent pour les inputs */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Poppins', sans-serif; /* Application de la nouvelle police */
+}
+
+/* Champs d'entrée : focus */
+.form_input:focus {
+    border-color: royalblue;
+    outline: none;
+    box-shadow: 0 0 5px rgba(65, 105, 225, 0.5); /* Effet lumineux */
+}
+
+/* Bouton de soumission */
+.btn_submit_Login {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: royalblue;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-family: 'Poppins', sans-serif; /* Application de la nouvelle police */
+}
+
+/* Bouton de soumission : hover */
+.btn_submit_Login:hover {
+    background-color: midnightblue;
+}
+
+/* Bouton de soumission : actif */
+.btn_submit_Login:active {
+    transform: scale(0.98); /* Effet d’appui */
+}
+
+/* Message d'erreur */
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    text-align: center;
+    font-family: 'Poppins', sans-serif; /* Application de la nouvelle police */
+}
+
+/* Style pour le texte de la direction de l'inscription */
+.Direction_SignUp {
+    font-size: 1rem; /* Taille de la police */
+    color: midnightblue; /* Couleur du texte */
+    margin-top: 1.5rem; /* Marge au-dessus pour espacer des autres éléments */
+    margin-left: 25px;
+    font-family: 'Poppins', sans-serif; /* Application de la nouvelle police */
+}
+
+/* Style pour le lien */
+.Direction_SignUp a {
+    color: royalblue; /* Couleur du lien */
+    font-weight: 600; /* Poids du texte du lien */
+    text-decoration: none; /* Retire le soulignement */
+    transition: color 0.3s ease; /* Animation de la couleur */
+}
+
+/* Effet au survol du lien */
+.Direction_SignUp a:hover {
+    color: midnightblue; /* Change la couleur du lien au survol */
+    text-decoration: underline; /* Sous-ligne le texte quand il est survolé */
+}
+
