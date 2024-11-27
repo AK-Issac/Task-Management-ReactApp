@@ -5,13 +5,13 @@ import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth
 
 // à remplacer pour pas trop dépasser limite et requête
 const firebaseConfig = {
-    apiKey: "AIzaSyAf2sIeBe9j9i39DrL9u32py-5DfIVm1qc",
-    authDomain: "projet-bc37c.firebaseapp.com",
-    databaseURL: "https://projet-bc37c-default-rtdb.firebaseio.com",
-    projectId: "projet-bc37c",
-    storageBucket: "projet-bc37c.appspot.com",
-    messagingSenderId: "329017083370",
-    appId: "1:329017083370:web:2a967a79bd2ac5c3645e93"
+    apiKey: "AIzaSyC10xIU8VP83MNUvRQbq59bVf3bf-Vn2hE",
+    authDomain: "projet-9f0cf.firebaseapp.com",
+    databaseURL: "https://projet-9f0cf-default-rtdb.firebaseio.com",
+    projectId: "projet-9f0cf",
+    storageBucket: "projet-9f0cf.appspot.com",
+    messagingSenderId: "799669167729",
+    appId: "1:799669167729:web:5433d75097d6eee5bc1dd0"
 };
 
 const app = initializeApp(firebaseConfig);
