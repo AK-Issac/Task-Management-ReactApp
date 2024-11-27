@@ -31,19 +31,16 @@ export function Tasks() {
 
         // Récupérer les utilisateurs pour l'ajout de tâches (si l'utilisateur est admin)
         const fetchUsers = async () => {
-<<<<<<< HEAD
             const q = query(collection(db, "users"), where("role", "==", "Community"));
             const querySnapshot = await getDocs(q);
             const fetchedUsers = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setUsers(fetchedUsers);
-=======
             if (userRole === "admin") {
                 const q = query(collection(db, "users"), where("role", "==", "student"));
                 const querySnapshot = await getDocs(q);
                 const fetchedUsers = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setUsers(fetchedUsers);
             }
->>>>>>> a7dc19d78323f9dea2e94cbc26cfba2917de88f5
         };
         fetchUsers();
 
@@ -61,6 +58,13 @@ export function Tasks() {
         };
         fetchTasks();
     }, [userRole]); // Utiliser userRole comme dépendance pour mettre à jour les utilisateurs et les tâches
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+          setUsers(currentUser);
+        });
+        return () => unsubscribe();
+    }, []);
 
     // Gestion du début de glisser (drag)
     const handleDragStart = (e, taskId, status) => {
