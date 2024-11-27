@@ -57,6 +57,13 @@ export function Tasks() {
         fetchTasks();
     }, [userRole]); // Utiliser userRole comme dépendance pour mettre à jour les utilisateurs et les tâches
 
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+          setUsers(currentUser);
+        });
+        return () => unsubscribe();
+    }, []);
+
     // Gestion du début de glisser (drag)
     const handleDragStart = (e, taskId, status) => {
         e.dataTransfer.setData("taskId", taskId);
