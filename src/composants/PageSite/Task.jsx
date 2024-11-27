@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, getDocs, collection, query, where, addDoc, updateDoc } from "firebase/firestore";
+import { doc, getDocs, getDoc, collection, query, where, addDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from '../../../Firebase.js'; // Votre fichier de configuration Firebase
 import Student from '../../assets/Student.svg';
 import Teacher from '../../assets/Teacher.svg';
@@ -19,23 +19,21 @@ export function Tasks() {
     const [selectedUser, setSelectedUser] = useState(''); // Utilisateur sélectionné pour la tâche
     const [newTask, setNewTask] = useState(''); // Nouvelle tâche
     const [userRole, setUserRole] = useState(''); // Rôle de l'utilisateur connecté
+    const [loading, setLoading] = useState(true); // Pour afficher un chargement pendant que les données sont récupérées
 
     useEffect(() => {
         // Vérification du rôle de l'utilisateur connecté
         const checkUserRole = async () => {
             const userRef = doc(db, "users", auth.currentUser.uid);
-            const userDoc = await getDocs(userRef);
+            const userDoc = await getDoc(userRef); // Utilisation de getDoc pour un seul document
             setUserRole(userDoc.data().role);
+            setLoading(false); // Données chargées, on arrête le chargement
         };
         checkUserRole();
 
         // Récupérer les utilisateurs pour l'ajout de tâches (si l'utilisateur est admin)
         const fetchUsers = async () => {
-            const q = query(collection(db, "users"), where("role", "==", "Community"));
-            const querySnapshot = await getDocs(q);
-            const fetchedUsers = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setUsers(fetchedUsers);
-            if (userRole === "admin") {
+            if (userRole === "admin") { // Vérification du rôle avant de récupérer les utilisateurs
                 const q = query(collection(db, "users"), where("role", "==", "student"));
                 const querySnapshot = await getDocs(q);
                 const fetchedUsers = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -108,7 +106,7 @@ export function Tasks() {
             return;
         }
 
-        const roleToSearch = userRole === "Admin" ? "student" : "teacher";
+        const roleToSearch = userRole === "admin" ? "student" : "teacher";
         const q = query(
             collection(db, "users"),
             where("role", "==", roleToSearch),
@@ -135,13 +133,17 @@ export function Tasks() {
         }
     };
 
+    if (loading) {
+        return <div>Loading...</div>; // Affichage de "loading" tant que les données sont en cours de récupération
+    }
+
     return (
         <div className="App">
             <div className='Recherche'>
                 <input
                     className='RechercheInput'
                     type='text'
-                    placeholder={`Rechercher ${userRole === "Admin" ? "un étudiant" : "un enseignant"}`}
+                    placeholder={`Rechercher ${userRole === "admin" ? "un étudiant" : "un enseignant"}`}
                     value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
@@ -212,7 +214,7 @@ export function Tasks() {
                 </div>
 
                 {/* Section Ajouter une tâche pour l'admin */}
-                {userRole === "Admin" && (
+                {userRole === "admin" && (
                     <div className='Add_Task_Section'>
                         <h2>Ajouter une nouvelle tâche</h2>
                         <select
