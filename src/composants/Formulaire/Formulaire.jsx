@@ -4,7 +4,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import './Formulaire.css'
 
-export function Formulaire() {
+function Formulaire() {
   const [titre, setTitre] = useState('');
   const [priorite, setPriorite] = useState('faible');
   const [description, setDesciption] = useState('');
@@ -124,3 +124,5 @@ export function Formulaire() {
     </div>
   );
 };
+
+export default Formulaire
