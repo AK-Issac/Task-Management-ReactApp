@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { auth, db } from '../../../Firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import { sendEmailVerification, createUserWithEmailAndPassword } from 'firebase/auth'
+import { sendEmailVerification, createUserWithEmailAndPassword } from 'firebase/auth';
+
 
 export function SignUp() {
     const [role, setRole] = useState("Community"); // Rôle par défaut
@@ -47,17 +48,26 @@ export function SignUp() {
             // Création de l'utilisateur
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            
-            await sendEmailVerification(user);
-            alert('Inscription réussie! Veuillez vérifier votre e-mail pour la confirmation.');
 
-            await setDoc(doc(db, "users", user.uid), {
+            const userRef = doc(db, "users", user.uid);
+      
+            /*await userRef.set({
+            email: user.email,
+            role: role, // ou "admin" pour un administrateur
+            });*/
+            await setDoc(userRef, {
                 prenom: name,
                 nom: birthName,
                 dateNaissance: dateNaissance,
                 genre: gender,
-                email: email
+                email: user.email,
+                role: role
             });
+
+            await sendEmailVerification(user);
+            alert(`Inscription réussie en tant que ${role}! Veuillez vérifier votre e-mail pour la confirmation.`);
+
+            
 
             // Téléchargement de la photo si fournie
             /*let photoURL = null;
