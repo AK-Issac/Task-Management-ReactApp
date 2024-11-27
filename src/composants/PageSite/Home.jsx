@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'; // Pour la navigation
 
 export function Home() {
     const [userRole, setUserRole] = useState('');
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,6 +28,14 @@ export function Home() {
             fetchUserRole();
         }
     }, [navigate]);
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+          setUser(currentUser);
+        });
+        return () => unsubscribe();
+    }, []);
+
 
     // Fonctions de navigation
     const handleViewStudents = () => {
