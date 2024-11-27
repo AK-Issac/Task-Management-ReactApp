@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { doc, getDocs, getDoc, collection, query, where, addDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from '../../../Firebase.js'; // Votre fichier de configuration Firebase
+import { useNavigate } from 'react-router-dom';
 import Student from '../../assets/Student.svg';
 import Teacher from '../../assets/Teacher.svg';
 import Task from '../../assets/Task.svg';
@@ -21,48 +22,60 @@ export function Tasks() {
     const [userRole, setUserRole] = useState(''); // Rôle de l'utilisateur connecté
     const [loading, setLoading] = useState(true); // Pour afficher un chargement pendant que les données sont récupérées
 
-    useEffect(() => {
-        // Vérification du rôle de l'utilisateur connecté
-        const checkUserRole = async () => {
-            const userRef = doc(db, "users", auth.currentUser.uid);
-            const userDoc = await getDoc(userRef); // Utilisation de getDoc pour un seul document
-            setUserRole(userDoc.data().role);
-            setLoading(false); // Données chargées, on arrête le chargement
-        };
-        checkUserRole();
+    const navigate = useNavigate();
 
-        // Récupérer les utilisateurs pour l'ajout de tâches (si l'utilisateur est admin)
-        const fetchUsers = async () => {
-            if (userRole === "admin") { // Vérification du rôle avant de récupérer les utilisateurs
-                const q = query(collection(db, "users"), where("role", "==", "student"));
-                const querySnapshot = await getDocs(q);
-                const fetchedUsers = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setUsers(fetchedUsers);
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                // Vérification de l'utilisateur connecté
+                const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+                    if (currentUser) {
+                        const userRef = doc(db, "users", currentUser.uid);
+                        const userDoc = await getDoc(userRef);
+    
+                        if (userDoc.exists()) {
+                            const role = userDoc.data().role;
+                            setUserRole(role);
+    
+                            // Charger les tâches pour l'utilisateur connecté
+                            const tasksQuery = query(collection(db, "tasks"), where("assignedTo", "==", currentUser.uid));
+                            const tasksSnapshot = await getDocs(tasksQuery);
+    
+                            const fetchedTasks = { todo: [], inProgress: [], done: [] };
+                            tasksSnapshot.docs.forEach((doc) => {
+                                const task = { id: doc.id, ...doc.data() };
+                                fetchedTasks[task.status].push(task);
+                            });
+                            setTasks(fetchedTasks);
+    
+                            // Charger la liste des utilisateurs ayant le rôle "Community" si l'utilisateur est Admin
+                            if (role === "Admin") {
+                                const communityQuery = query(collection(db, "users"), where("role", "==", "Community"));
+                                const communitySnapshot = await getDocs(communityQuery);
+                                const fetchedUsers = communitySnapshot.docs.map((doc) => ({
+                                    id: doc.id,
+                                    ...doc.data(),
+                                }));
+                                setUsers(fetchedUsers);
+                            }
+                        }
+                    } else {
+                        console.log("Aucun utilisateur connecté.");
+                    }
+                });
+    
+                // Nettoyage du listener à la fin
+                return () => unsubscribe();
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données :", error);
+            } finally {
+                setLoading(false);
             }
         };
-        fetchUsers();
-
-        // Récupérer les tâches assignées à l'utilisateur connecté
-        const fetchTasks = async () => {
-            const q = query(collection(db, "tasks"), where("assignedTo", "==", auth.currentUser.uid));
-            const querySnapshot = await getDocs(q);
-
-            const taskData = { todo: [], inProgress: [], done: [] };
-            querySnapshot.docs.forEach(doc => {
-                const task = { id: doc.id, ...doc.data() };
-                taskData[task.status].push(task);
-            });
-            setTasks(taskData);
-        };
-        fetchTasks();
-    }, [userRole]); // Utiliser userRole comme dépendance pour mettre à jour les utilisateurs et les tâches
-
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-          setUsers(currentUser);
-        });
-        return () => unsubscribe();
-    }, []);
+    
+        fetchData();
+    }, []);    
 
     // Gestion du début de glisser (drag)
     const handleDragStart = (e, taskId, status) => {
@@ -106,7 +119,7 @@ export function Tasks() {
             return;
         }
 
-        const roleToSearch = userRole === "admin" ? "student" : "teacher";
+        const roleToSearch = userRole === "Admin" ? "student" : "teacher";
         const q = query(
             collection(db, "users"),
             where("role", "==", roleToSearch),
@@ -119,7 +132,7 @@ export function Tasks() {
     };
 
     const handleAddTask = async () => {
-        if (selectedUser && newTask) {
+        /*if (selectedUser && newTask) {
             await addDoc(collection(db, "tasks"), {
                 assignedTo: selectedUser,
                 task: newTask,
@@ -130,7 +143,8 @@ export function Tasks() {
             setSelectedUser('');
         } else {
             alert("Veuillez sélectionner un utilisateur et entrer une tâche.");
-        }
+        }*/
+        navigate('/formulaire')
     };
 
     if (loading) {
@@ -143,7 +157,7 @@ export function Tasks() {
                 <input
                     className='RechercheInput'
                     type='text'
-                    placeholder={`Rechercher ${userRole === "admin" ? "un étudiant" : "un enseignant"}`}
+                    placeholder={`Rechercher ${userRole === "Admin" ? "un étudiant" : "un enseignant"}`}
                     value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
@@ -213,29 +227,9 @@ export function Tasks() {
                     ))}
                 </div>
 
-                {/* Section Ajouter une tâche pour l'admin */}
-                {userRole === "admin" && (
+                {/* Section Ajouter une tâche pour l'Admin */}
+                {userRole === "Admin" && (
                     <div className='Add_Task_Section'>
-                        <h2>Ajouter une nouvelle tâche</h2>
-                        <select
-                            value={selectedUser}
-                            onChange={(e) => setSelectedUser(e.target.value)}
-                            className='User_Select'
-                        >
-                            <option value="">Sélectionner un étudiant</option>
-                            {users.map(user => (
-                                <option key={user.id} value={user.id}>
-                                    {user.name}
-                                </option>
-                            ))}
-                        </select>
-                        <input
-                            type="text"
-                            placeholder="Entrez une tâche"
-                            value={newTask}
-                            onChange={(e) => setNewTask(e.target.value)}
-                            className='Task_Input'
-                        />
                         <button className='Add_Task_Button' onClick={handleAddTask}>
                             Ajouter une Tâche
                         </button>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { db, auth } from "../../../Firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useNavigate } from 'react-router-dom';
 import './Formulaire.css'
 
 export function Formulaire() {
@@ -13,6 +14,10 @@ export function Formulaire() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [user, setUser] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -73,6 +78,10 @@ export function Formulaire() {
     }
   };
 
+  const annulerBtn = () => {
+    navigate('/Tasks')
+  }
+
   return (
     <div className="formulaire-container">
       <h2>Formulaire de soumission de Tâche</h2>
@@ -116,10 +125,27 @@ export function Formulaire() {
             onChange={(e) => setCommentaire(e.target.value)}
           ></textarea>
         </div>
+        <div className="form-group">
+          <select
+              value={selectedUser}
+              onChange={(e) => setSelectedUser(e.target.value)}
+              className='User_Select'
+          >
+            <option value="">Sélectionner un étudiant</option>
+            {users.map(user => (
+                <option key={user.id} value={user.id}>
+                    {user.name}
+                </option>
+            ))}
+          </select>
+        </div>
         <button type="submit" disabled={loading}>
           {loading ? "Soumission..." : "Soumettre"}
         </button>
       </form>
+      <button type="button" onClick={annulerBtn}>
+          Annuler
+      </button>
       {success && <p>Tâche soumise avec succès !</p>}
     </div>
   );
