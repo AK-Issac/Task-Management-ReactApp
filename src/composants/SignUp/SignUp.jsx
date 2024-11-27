@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { auth, db } from '../../../Firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import { sendEmailVerification, createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export function SignUp() {
     const [role, setRole] = useState("Community"); // Rôle par défaut
@@ -61,8 +61,6 @@ export function SignUp() {
                 uid: user.uid, // Ajout de l'UID dans Firestore
             });
 
-            // Envoi d'une vérification par e-mail
-            await sendEmailVerification(user);
             alert(`Inscription réussie en tant que ${role}!`);
 
             navigate('/home'); // Redirection vers la page d'accueil après l'inscription
@@ -213,7 +211,7 @@ export function SignUp() {
                                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                             </form>
 
-                            <p className='Direction_SignUp'>Vous avez déjà un compte? <Link to="/connexion">Cliquez-ici</Link></p>
+                            <p className='Direction_SignUp'>Vous avez déjà un compte? <Link to="/">Cliquez-ici</Link></p>
                         </div>
                     </div>
                 </div>
