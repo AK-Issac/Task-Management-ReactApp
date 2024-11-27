@@ -31,7 +31,7 @@ export function Tasks() {
 
         // Récupérer les utilisateurs pour l'ajout de tâches
         const fetchUsers = async () => {
-            const q = query(collection(db, "users"), where("role", "==", "community"));
+            const q = query(collection(db, "users"), where("role", "==", "Community"));
             const querySnapshot = await getDocs(q);
             const fetchedUsers = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setUsers(fetchedUsers);
@@ -95,7 +95,7 @@ export function Tasks() {
             return;
         }
 
-        const roleToSearch = userRole === "admin" ? "student" : "teacher";
+        const roleToSearch = userRole === "Admin" ? "student" : "teacher";
         const q = query(
             collection(db, "users"),
             where("role", "==", roleToSearch),
@@ -128,7 +128,7 @@ export function Tasks() {
                 <input
                     className='RechercheInput'
                     type='text'
-                    placeholder={`Rechercher ${userRole === "admin" ? "un étudiant" : "un enseignant"}`}
+                    placeholder={`Rechercher ${userRole === "Admin" ? "un étudiant" : "un enseignant"}`}
                     value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
@@ -199,7 +199,7 @@ export function Tasks() {
                 </div>
 
                 {/* Section Ajouter une tâche pour l'admin */}
-                {userRole === "admin" && (
+                {userRole === "Admin" && (
                     <div className='Add_Task_Section'>
                         <h2>Ajouter une nouvelle tâche</h2>
                         <select

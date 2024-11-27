@@ -65,7 +65,7 @@ export function SignUp() {
             });
 
             await sendEmailVerification(user);
-            alert(`Inscription réussie en tant que ${role}! Veuillez vérifier votre e-mail pour la confirmation.`);
+            alert(`Inscription réussie en tant que ${role}!`);
 
             
 
