@@ -39,19 +39,19 @@ export function Home() {
 
     // Fonctions de navigation
     const handleViewStudents = () => {
-        navigate('/students'); // Redirige vers la page des étudiants
+        navigate('/Student'); // Redirige vers la page des étudiants
     };
 
     const handleViewTasks = () => {
-        navigate('/tasks'); // Redirige vers la page des tâches
+        navigate('/Tasks'); // Redirige vers la page des tâches
     };
 
     const handleViewTeachers = () => {
-        navigate('/teachers'); // Redirige vers la page des enseignants
+        navigate('/Teachers'); // Redirige vers la page des enseignants
     };
 
     const handleViewProfile = () => {
-        navigate('/profile'); // Redirige vers la page du profil
+        navigate('/Profile'); // Redirige vers la page du profil
     };
 
     return (

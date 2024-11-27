@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import {collection, getDocs, query, orderBy, startAfter, limit, getDoc, doc} from 'firebase/firestore';
-import { db,auth } from '../../../Firebase.js'; // Votre fichier de configuration Firebase
+import { collection, getDocs, query, orderBy, startAfter, limit, getDoc, doc } from 'firebase/firestore';
+import { db, auth } from '../../../Firebase.js'; // Votre fichier de configuration Firebase
 import Student from '../../assets/Student.svg';
 import Teacher from '../../assets/Teacher.svg';
 import Task from '../../assets/Task.svg';
@@ -11,10 +11,11 @@ import { useNavigate } from 'react-router-dom'; // Pour la navigation
 export function Students() {
     const [users, setUsers] = useState([]);
     const [lastVisible, setLastVisible] = useState(null); // Pour la pagination
-    const [userRole, setUserRole] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [userRole, setUserRole] = useState(''); // Rôle de l'utilisateur connecté
+    const [loading, setLoading] = useState(true); // État de chargement
     const navigate = useNavigate();
 
+    // Vérification de l'authentification de l'utilisateur
     useEffect(() => {
         if (!auth.currentUser) {
             navigate('/'); // Redirige vers la page de login si l'utilisateur n'est pas authentifié
@@ -31,42 +32,62 @@ export function Students() {
         }
     }, [navigate]);
 
-    // Fonction pour récupérer les utilisateurs avec pagination
+    // Fonction pour récupérer les utilisateurs avec le rôle "Community" et pagination
     const fetchUsers = async () => {
         setLoading(true);
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, orderBy("name"), limit(50)); // Limite à 50 utilisateurs par page
+        try {
+            const usersRef = collection(db, "users");
+            // Filtrer les utilisateurs ayant le rôle "Community"
+            const q = query(usersRef, orderBy("name"), limit(50)); // Limite à 50 utilisateurs par page
+            const querySnapshot = await getDocs(q);
 
-        const querySnapshot = await getDocs(q);
-        const userList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            // Filtrer par rôle "Community"
+            const userList = querySnapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(user => user.role === 'Community'); // Filtrage des utilisateurs "Community"
 
-        setUsers(userList);
+            console.log("Utilisateurs récupérés: ", userList); // Pour vérifier les données récupérées
 
-        // Mémoriser le dernier document pour la pagination
-        const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastVisible(lastVisibleDoc);
-        setLoading(false);
+            setUsers(userList);
+
+            // Mémoriser le dernier document pour la pagination
+            const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+            setLastVisible(lastVisibleDoc);
+        } catch (error) {
+            console.error("Erreur de récupération des utilisateurs: ", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    // Fonction pour charger plus d'utilisateurs
+    // Fonction pour charger plus d'utilisateurs "Community"
     const loadMoreUsers = async () => {
         if (!lastVisible) return; // Si aucun document n'est disponible pour la pagination
 
         setLoading(true);
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, orderBy("name"), startAfter(lastVisible), limit(50));
+        try {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, orderBy("name"), startAfter(lastVisible), limit(50));
+            const querySnapshot = await getDocs(q);
 
-        const querySnapshot = await getDocs(q);
-        const userList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            // Filtrer par rôle "Community"
+            const userList = querySnapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(user => user.role === 'Community'); // Filtrage des utilisateurs "Community"
 
-        setUsers(prevUsers => [...prevUsers, ...userList]);
+            setUsers(prevUsers => [...prevUsers, ...userList]);
 
-        // Mettre à jour le dernier document visible
-        const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastVisible(lastVisibleDoc);
-        setLoading(false);
+            // Mettre à jour le dernier document visible
+            const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+            setLastVisible(lastVisibleDoc);
+        } catch (error) {
+            console.error("Erreur lors du chargement de plus d'utilisateurs: ", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
+    // Chargement initial des utilisateurs
     useEffect(() => {
         fetchUsers(); // Initialiser le chargement des utilisateurs
     }, []);
@@ -104,14 +125,18 @@ export function Students() {
             </div>
 
             <div className='Home_Information'>
-                <h1>Tous les utilisateurs</h1>
+                <h1>Utilisateurs "Community"</h1>
                 <div className='User_List'>
-                    {users.map(user => (
-                        <div key={user.id} className="User_Box">
-                            <h3>{user.name}</h3>
-                            <p>{user.role}</p>
-                        </div>
-                    ))}
+                    {users.length > 0 ? (
+                        users.map(user => (
+                            <div key={user.id} className="User_Box">
+                                <h3>{user.name}</h3>
+                                <p>{user.role}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>Aucun utilisateur trouvé.</p>
+                    )}
                 </div>
 
                 {/* Bouton pour charger plus d'utilisateurs */}
