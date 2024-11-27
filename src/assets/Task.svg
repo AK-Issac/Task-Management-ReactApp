@@ -1,0 +1,21 @@
+<svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        width="64"
+        height="64"
+>
+    <!-- Case cochée -->
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+    <polyline points="9 11 12 14 17 8"></polyline>
+    <!-- Première ligne -->
+    <line x1="3" y1="20" x2="8" y2="20"></line>
+    <line x1="10" y1="20" x2="21" y2="20"></line>
+    <!-- Deuxième ligne -->
+    <line x1="3" y1="17" x2="8" y2="17"></line>
+    <line x1="10" y1="17" x2="21" y2="17"></line>
+</svg>
