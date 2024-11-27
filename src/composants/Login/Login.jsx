@@ -1,7 +1,9 @@
 import './Login.css';
 import { useState } from "react";
-import {Link} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "../../../Firebase"
 
 export function Login() {
     const [role, setRole] = useState("Community"); // Rôle par défaut
@@ -10,7 +12,9 @@ export function Login() {
     const [errorMessage, setErrorMessage] = useState("");
     const [captchaVerified, setCaptchaVerified] = useState(false);
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault(); // Empêche le rechargement de la page
 
         // Validation basique pour l'exemple
@@ -20,6 +24,21 @@ export function Login() {
             setErrorMessage(""); // Réinitialise le message d'erreur
             console.log("Connexion avec :", { email, password });
             // Ajouter ici la logique de connexion (API, Firebase, etc.)
+        }
+
+        if (!captchaVerified) {
+            setErrorMessage('Veuillez compléter le CAPTCHA');
+            return;
+        }    
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            alert("Compte connecté avec succès!");
+            navigate('/home');
+        } catch (err) {
+            setErrorMessage('Erreur de connexion. Vérifiez vos informations.');
+            console.error(err);
+            alert(`Erreur durant la connexion de votre compte: ${err.message}`);
         }
     };
 
@@ -98,7 +117,7 @@ export function Login() {
                                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                             </form>
 
-                            <p className='Direction_SignUp'>Première utilisation?<Link> Cliquez-ici </Link></p>
+                            <p className='Direction_SignUp'>Première utilisation?<Link to="/inscription"> Cliquez-ici </Link></p>
                         </div>
                     </div>
                 </div>

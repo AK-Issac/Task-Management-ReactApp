@@ -1,7 +1,10 @@
 import './SignUp.css';
 import { useState } from "react";
-import {Link} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { auth, db } from '../../../Firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { sendEmailVerification, createUserWithEmailAndPassword } from 'firebase/auth'
 
 export function SignUp() {
     const [role, setRole] = useState("Community"); // Rôle par défaut
@@ -16,8 +19,20 @@ export function SignUp() {
     const [errorMessage, setErrorMessage] = useState("");
     const [captchaVerified, setCaptchaVerified] = useState(false);
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault(); // Empêche le rechargement de la page
+
+        if (password !== confirmPassword) {
+            setErrorMessage('Les mots de passe ne correspondent pas');
+            return;
+        }
+    
+        if (!captchaVerified) {
+            setErrorMessage('Veuillez compléter le CAPTCHA');
+            return;
+        }    
 
         // Validation basique pour l'exemple
         if (!email || !password) {
@@ -27,6 +42,42 @@ export function SignUp() {
             console.log("Connexion avec :", { email, password });
             // Ajouter ici la logique de connexion (API, Firebase, etc.)
         }
+
+        try {
+            // Création de l'utilisateur
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            
+            await sendEmailVerification(user);
+            alert('Inscription réussie! Veuillez vérifier votre e-mail pour la confirmation.');
+
+            await setDoc(doc(db, "users", user.uid), {
+                prenom: name,
+                nom: birthName,
+                dateNaissance: dateNaissance,
+                genre: gender,
+                email: email
+            });
+
+            // Téléchargement de la photo si fournie
+            /*let photoURL = null;
+            if (photo) {
+                const storageRef = ref(storage, `profile_pictures/${userCredential.user.uid}/${photo.name}`);
+                await uploadBytes(storageRef, photo);
+                photoURL = await getDownloadURL(storageRef);
+            }*/
+    
+            // Mise à jour du profil de l'utilisateur avec le nom et la photo
+            /*await updateProfile(userCredential.user, {
+                displayName: username,
+                photoURL: photoURL
+            });*/
+
+            navigate('/home')
+        } catch (err) {
+            setErrorMessage(err.message);
+            alert(`Erreur durant la création du compte: ${err.message}`);
+        }    
     };
 
     const handleCaptchaChange = (value) => setCaptchaVerified(value !== null);
@@ -170,7 +221,7 @@ export function SignUp() {
                                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                             </form>
 
-                            <p className='Direction_SignUp'>Vous avez deja un compte?<Link> Cliquez-ici </Link></p>
+                            <p className='Direction_SignUp'>Vous avez deja un compte?<Link to="/connexion"> Cliquez-ici </Link></p>
                         </div>
                     </div>
                 </div>
