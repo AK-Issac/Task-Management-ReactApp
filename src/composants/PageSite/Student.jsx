@@ -32,14 +32,19 @@ export function Students() {
         }
     }, [navigate]);
 
-    // Fonction pour récupérer les utilisateurs avec pagination
+    // Fonction pour récupérer les utilisateurs avec le rôle "Community" et pagination
     const fetchUsers = async () => {
         setLoading(true);
         try {
             const usersRef = collection(db, "users");
+            // Filtrer les utilisateurs ayant le rôle "Community"
             const q = query(usersRef, orderBy("name"), limit(50)); // Limite à 50 utilisateurs par page
             const querySnapshot = await getDocs(q);
-            const userList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // Filtrer par rôle "Community"
+            const userList = querySnapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(user => user.role === 'Community'); // Filtrage des utilisateurs "Community"
 
             console.log("Utilisateurs récupérés: ", userList); // Pour vérifier les données récupérées
 
@@ -55,7 +60,7 @@ export function Students() {
         }
     };
 
-    // Fonction pour charger plus d'utilisateurs
+    // Fonction pour charger plus d'utilisateurs "Community"
     const loadMoreUsers = async () => {
         if (!lastVisible) return; // Si aucun document n'est disponible pour la pagination
 
@@ -64,7 +69,11 @@ export function Students() {
             const usersRef = collection(db, "users");
             const q = query(usersRef, orderBy("name"), startAfter(lastVisible), limit(50));
             const querySnapshot = await getDocs(q);
-            const userList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // Filtrer par rôle "Community"
+            const userList = querySnapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(user => user.role === 'Community'); // Filtrage des utilisateurs "Community"
 
             setUsers(prevUsers => [...prevUsers, ...userList]);
 
@@ -116,7 +125,7 @@ export function Students() {
             </div>
 
             <div className='Home_Information'>
-                <h1>Tous les utilisateurs</h1>
+                <h1>Utilisateurs "Community"</h1>
                 <div className='User_List'>
                     {users.length > 0 ? (
                         users.map(user => (

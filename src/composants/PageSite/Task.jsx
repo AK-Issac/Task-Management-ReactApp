@@ -16,9 +16,9 @@ export function Tasks() {
     const [users, setUsers] = useState([]); // Liste des utilisateurs pour l'ajout de tâches
     const [searchResults, setSearchResults] = useState([]); // Résultats de recherche
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedUser, setSelectedUser] = useState('');
-    const [newTask, setNewTask] = useState('');
-    const [userRole, setUserRole] = useState('');
+    const [selectedUser, setSelectedUser] = useState(''); // Utilisateur sélectionné pour la tâche
+    const [newTask, setNewTask] = useState(''); // Nouvelle tâche
+    const [userRole, setUserRole] = useState(''); // Rôle de l'utilisateur connecté
 
     useEffect(() => {
         // Vérification du rôle de l'utilisateur connecté
@@ -29,12 +29,14 @@ export function Tasks() {
         };
         checkUserRole();
 
-        // Récupérer les utilisateurs pour l'ajout de tâches
+        // Récupérer les utilisateurs pour l'ajout de tâches (si l'utilisateur est admin)
         const fetchUsers = async () => {
-            const q = query(collection(db, "users"), where("role", "==", "community"));
-            const querySnapshot = await getDocs(q);
-            const fetchedUsers = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setUsers(fetchedUsers);
+            if (userRole === "admin") {
+                const q = query(collection(db, "users"), where("role", "==", "student"));
+                const querySnapshot = await getDocs(q);
+                const fetchedUsers = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setUsers(fetchedUsers);
+            }
         };
         fetchUsers();
 
@@ -51,7 +53,7 @@ export function Tasks() {
             setTasks(taskData);
         };
         fetchTasks();
-    }, []);
+    }, [userRole]); // Utiliser userRole comme dépendance pour mettre à jour les utilisateurs et les tâches
 
     // Gestion du début de glisser (drag)
     const handleDragStart = (e, taskId, status) => {
@@ -207,7 +209,7 @@ export function Tasks() {
                             onChange={(e) => setSelectedUser(e.target.value)}
                             className='User_Select'
                         >
-                            <option value="">Sélectionner un utilisateur</option>
+                            <option value="">Sélectionner un étudiant</option>
                             {users.map(user => (
                                 <option key={user.id} value={user.id}>
                                     {user.name}
