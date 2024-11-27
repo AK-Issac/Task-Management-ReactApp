@@ -4,7 +4,7 @@ import Task from '../../assets/Task.svg';
 import Profile from '../../assets/Profile.svg'
 
 import './Home.css'
-function App() {
+export function Home() {
 
 
   return (
@@ -49,5 +49,3 @@ function App() {
       </div>
   )
 }
-
-export default App

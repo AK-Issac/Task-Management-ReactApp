@@ -132,17 +132,13 @@ body {
 /* Boutons de rôle */
 .Btn_Role_SignUp {
     height: 55px;
-    border-radius: 27.5px;
     letter-spacing: .5px;
     margin-left: 20%;
     width: 60%;
     margin-bottom: 1rem;
     margin-right: 10px;
-    border-width: 2px;
     font-size: 1.2rem;
     line-height: 1.3rem;
-    border-style: solid;
-    border-color: midnightblue;
     text-align: center;
     display: flex;
     gap: 10px; /* Espacement entre les boutons */

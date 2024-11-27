@@ -33,7 +33,7 @@ html, body {
   padding-inline-start: 52px;
   position: relative;
   width: 50%;
-  background-image: url("../../../Tp2/Task-Management-ReactApp/src/assets/Recherche.svg");
+  background-image: url("../../assets/Recherche.svg");
   background-position: right;
   background-repeat: no-repeat;
   padding-left: 18px;
@@ -92,7 +92,7 @@ html, body {
 }
 
 .Home_Information {
-  background-image: url("../../../Tp2/Task-Management-ReactApp/src/assets/FondHome.jpg");
+  background-image: url("../../assets/FondHome.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
