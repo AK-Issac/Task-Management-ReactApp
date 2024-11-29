@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { db, auth } from "../../../Firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, Timestamp, query, where, getDocs } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from 'react-router-dom';
-import './Formulaire.css'
+import './Formulaire.css';
 
 export function Formulaire() {
   const [titre, setTitre] = useState('');
@@ -14,7 +14,7 @@ export function Formulaire() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [user, setUser] = useState(null);
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // Liste des utilisateurs de type "Community"
   const [selectedUser, setSelectedUser] = useState('');
 
   const navigate = useNavigate();
@@ -23,9 +23,27 @@ export function Formulaire() {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
     });
-    return () => unsubscribe();
-  }, []);
 
+    const fetchCommunityUsers = async () => {
+      try {
+        const q = query(collection(db, "users"), where("role", "==", "Community"));
+        const querySnapshot = await getDocs(q);
+        const fetchedUsers = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setUsers(fetchedUsers);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs communautaires:", error);
+      }
+    };
+
+    if (user) {
+      fetchCommunityUsers();
+    }
+
+    return () => unsubscribe();
+  }, [user]);
 
   const handleFileChange = (e) => {
     setFichier(e.target.files[0]);
@@ -37,9 +55,9 @@ export function Formulaire() {
     setSuccess(false);
 
     try {
-      const user = auth.currentUser;
+      const currentUser = auth.currentUser;
 
-      if (!user) {
+      if (!currentUser) {
         throw new Error("Utilisateur non authentifié !");
       }
 
@@ -60,7 +78,8 @@ export function Formulaire() {
         description,
         commentaire,
         fichierURL,
-        userId: user.uid,
+        userId: currentUser.uid,
+        assignedTo: selectedUser, // Attribuer la tâche à un utilisateur de type "Community"
         createdAt: Timestamp.now(),
       });
 
@@ -70,6 +89,7 @@ export function Formulaire() {
       setDesciption('');
       setCommentaire('');
       setFichier(null);
+      setSelectedUser(''); // Réinitialiser l'utilisateur sélectionné
     } catch (error) {
       console.error("Erreur lors de la soumission :", error);
       alert("Une erreur s'est produite. Veuillez réessayer.");
@@ -79,8 +99,8 @@ export function Formulaire() {
   };
 
   const annulerBtn = () => {
-    navigate('/Tasks')
-  }
+    navigate('/Tasks');
+  };
 
   return (
     <div className="formulaire-container">
@@ -105,7 +125,7 @@ export function Formulaire() {
           </select>
         </div>
         <div className="form-group">
-          <label>Description</label><br/>
+          <label>Description</label><br />
           <textarea
             name="description"
             value={description}
@@ -118,7 +138,7 @@ export function Formulaire() {
           <input type="file" name="fichier" onChange={handleFileChange} />
         </div>
         <div className="form-group">
-          <label>Commentaires</label><br/>
+          <label>Commentaires</label><br />
           <textarea
             name="commentaire"
             value={commentaire}
@@ -126,27 +146,29 @@ export function Formulaire() {
           ></textarea>
         </div>
         <div className="form-group">
+          <label>Assigner à un étudiant</label>
           <select
-              value={selectedUser}
-              onChange={(e) => setSelectedUser(e.target.value)}
-              className='User_Select'
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            className="User_Select"
           >
             <option value="">Sélectionner un étudiant</option>
             {users.map(user => (
-                <option key={user.id} value={user.id}>
-                    {user.name}
-                </option>
+              <option key={user.id} value={user.id}>
+                {user.prenom} {user.nom}
+              </option>
             ))}
           </select>
+          
         </div>
         <button type="submit" disabled={loading}>
           {loading ? "Soumission..." : "Soumettre"}
         </button>
       </form>
       <button type="button" onClick={annulerBtn}>
-          Annuler
+        Annuler
       </button>
       {success && <p>Tâche soumise avec succès !</p>}
     </div>
   );
-};
+}

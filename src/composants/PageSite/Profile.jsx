@@ -7,7 +7,7 @@ import './Profile.css';
 import Student from '../../assets/Student.svg';
 import Teacher from '../../assets/Teacher.svg';
 import Task from '../../assets/Task.svg';
-import ProfileIcon from '../../assets/Profile.svg'; // Assuming you have this image
+import Profilez from '../../assets/Profile.svg'; // Assuming you have this image
 
 const auth = getAuth();
 const storage = getStorage();
@@ -164,24 +164,7 @@ export function Profile() {
 
     return (
         <div className="App">
-            <div className="Recherche">
-                <input
-                    className="RechercheInput"
-                    type="text"
-                    placeholder={`Rechercher ${userRole === "Admin" ? "un étudiant" : "un enseignant"}`}
-                    value={searchTerm}
-                    onChange={(e) => handleSearch(e.target.value)}
-                />
-            </div>
-            {searchResults.length > 0 && (
-                <div className="Search_Results">
-                    {searchResults.map(user => (
-                        <div key={user.id} className="Search_Result_Item">
-                            {user.name} - {user.role}
-                        </div>
-                    ))}
-                </div>
-            )}
+            
 
             <div className='Header_Home'>
                 <div className='Students'>
@@ -203,8 +186,8 @@ export function Profile() {
                     </button>
                 </div>
                 <div className='Profile'>
-                    <button className='btn_Profile' type='button' onClick={handleViewProfile}>
-                        <img className='img_Profile' src={Profile} alt='Profile' />
+                    <button className='btn_Profile' type='button' onClick={() => navigate('/Profile')}>
+                        <img className='img_Profile' src={Profilez} alt='Profile' />
                         <p className='text_Profile'>Profile</p>
                     </button>
                 </div>

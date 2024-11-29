@@ -103,7 +103,7 @@ html, body {
     justify-content: flex-start; /* Aligner en haut */
     align-items: center; /* Centrer horizontalement */
     text-align: center;
-    padding-top: 50px; /* Espacement en haut */
+    padding-top: 10%; /* Espacement en haut */
 
 }
 

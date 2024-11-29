@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, getDocs, getDoc, collection, query, where, addDoc, updateDoc } from "firebase/firestore";
+import { doc, getDocs, getDoc, collection, query, where, updateDoc } from "firebase/firestore";
 import { db, auth } from '../../../Firebase.js'; // Votre fichier de configuration Firebase
 import { useNavigate } from 'react-router-dom';
 import Student from '../../assets/Student.svg';
@@ -24,58 +24,72 @@ export function Tasks() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                // Vérification de l'utilisateur connecté
-                const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
-                    if (currentUser) {
-                        const userRef = doc(db, "users", currentUser.uid);
-                        const userDoc = await getDoc(userRef);
-    
-                        if (userDoc.exists()) {
-                            const role = userDoc.data().role;
-                            setUserRole(role);
-    
-                            // Charger les tâches pour l'utilisateur connecté
-                            const tasksQuery = query(collection(db, "tasks"), where("assignedTo", "==", currentUser.uid));
-                            const tasksSnapshot = await getDocs(tasksQuery);
-    
-                            const fetchedTasks = { todo: [], inProgress: [], done: [] };
-                            tasksSnapshot.docs.forEach((doc) => {
-                                const task = { id: doc.id, ...doc.data() };
-                                fetchedTasks[task.status].push(task);
-                            });
-                            setTasks(fetchedTasks);
-    
-                            // Charger la liste des utilisateurs ayant le rôle "Community" si l'utilisateur est Admin
-                            if (role === "Admin") {
-                                const communityQuery = query(collection(db, "users"), where("role", "==", "Community"));
-                                const communitySnapshot = await getDocs(communityQuery);
-                                const fetchedUsers = communitySnapshot.docs.map((doc) => ({
-                                    id: doc.id,
-                                    ...doc.data(),
-                                }));
-                                setUsers(fetchedUsers);
-                            }
+useEffect(() => {
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+                if (currentUser) {
+                    const userRef = doc(db, "users", currentUser.uid);
+                    const userDoc = await getDoc(userRef);
+
+                    if (userDoc.exists()) {
+                        const role = userDoc.data().role;
+                        setUserRole(role);
+
+                        let tasksQuery;
+
+                        // Si Admin, récupérer toutes les tâches assignées par l'utilisateur
+                        if (role === "Admin") {
+                            tasksQuery = query(collection(db, "taches"), where("userId", "==", currentUser.uid));
                         }
-                    } else {
-                        console.log("Aucun utilisateur connecté.");
+                        // Si Community, récupérer les tâches qui lui sont assignées
+                        else if (role === "Community") {
+                            tasksQuery = query(collection(db, "taches"), where("assignedTo", "==", currentUser.uid));
+                        }
+
+                        const tasksSnapshot = await getDocs(tasksQuery);
+
+                        const fetchedTasks = { todo: [], inProgress: [], done: [] };
+                        tasksSnapshot.docs.forEach((doc) => {
+                            const task = { id: doc.id, ...doc.data() };
+                            const status = task.status || "todo"; // Par défaut, mettre les tâches sans statut dans "todo"
+                            if (!fetchedTasks[status]) {
+                                fetchedTasks[status] = []; // S'assurer que la catégorie existe
+                            }
+                            fetchedTasks[status].push(task);
+                        });
+
+                        setTasks(fetchedTasks);
+
+                        // Charger les utilisateurs pour les Admin uniquement
+                        if (role === "Admin") {
+                            const communityQuery = query(collection(db, "users"), where("role", "==", "Community"));
+                            const communitySnapshot = await getDocs(communityQuery);
+                            const fetchedUsers = communitySnapshot.docs.map((doc) => ({
+                                id: doc.id,
+                                ...doc.data(),
+                            }));
+                            setUsers(fetchedUsers);
+                        }
                     }
-                });
+                } else {
+                    console.log("Aucun utilisateur connecté.");
+                }
+            });
+
+            return () => unsubscribe();
+        } catch (error) {
+            console.error("Erreur lors de la récupération des données :", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchData();
+}, []);
+
     
-                // Nettoyage du listener à la fin
-                return () => unsubscribe();
-            } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-    
-        fetchData();
-    }, []);    
 
     // Gestion du début de glisser (drag)
     const handleDragStart = (e, taskId, status) => {
@@ -91,7 +105,7 @@ export function Tasks() {
         if (currentStatus === newStatus) return; // Pas de changement de catégorie
 
         // Mettre à jour la catégorie dans Firebase
-        const taskRef = doc(db, "tasks", taskId);
+        const taskRef = doc(db, "taches", taskId);
         await updateDoc(taskRef, { status: newStatus });
 
         // Mettre à jour l'état local
@@ -111,41 +125,31 @@ export function Tasks() {
         e.preventDefault(); // Nécessaire pour autoriser le drop
     };
 
-    const handleSearch = async (term) => {
+    const handleSearch = (term) => {
         setSearchTerm(term);
-
+    
         if (term.trim() === "") {
             setSearchResults([]);
             return;
         }
-
-        const roleToSearch = userRole === "Admin" ? "student" : "teacher";
-        const q = query(
-            collection(db, "users"),
-            where("role", "==", roleToSearch),
-            where("name", ">=", term),
-            where("name", "<=", term + '\uf8ff')
-        );
-        const querySnapshot = await getDocs(q);
-        const results = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setSearchResults(results);
+    
+        // Concaténer toutes les tâches dans un seul tableau pour simplifier le filtrage
+        const allTasks = [...tasks.todo, ...tasks.inProgress, ...tasks.done];
+    
+        // Filtrer les tâches selon le terme recherché
+        const filteredTasks = allTasks.filter((task) => {
+            const searchIn = `${task.titre || ''} ${task.description || ''} ${task.commentaires || ''}`.toLowerCase();
+            return searchIn.includes(term.toLowerCase());
+        });
+    
+        setSearchResults(filteredTasks);
     };
+    
 
     const handleAddTask = async () => {
-        /*if (selectedUser && newTask) {
-            await addDoc(collection(db, "tasks"), {
-                assignedTo: selectedUser,
-                task: newTask,
-                status: "todo", // La tâche est ajoutée dans la colonne "À faire" par défaut
-            });
-            alert("Tâche ajoutée avec succès !");
-            setNewTask('');
-            setSelectedUser('');
-        } else {
-            alert("Veuillez sélectionner un utilisateur et entrer une tâche.");
-        }*/
-        navigate('/formulaire')
+        navigate('/formulaire');
     };
+
     // Fonctions de navigation
     const handleViewStudents = () => {
         navigate('/Student'); // Redirige vers la page des étudiants
@@ -169,26 +173,8 @@ export function Tasks() {
 
     return (
         <div className="App">
-            <div className='Recherche'>
-                <input
-                    className='RechercheInput'
-                    type='text'
-                    placeholder={`Rechercher ${userRole === "Admin" ? "un étudiant" : "un enseignant"}`}
-                    value={searchTerm}
-                    onChange={(e) => handleSearch(e.target.value)}
-                />
-            </div>
-            {searchResults.length > 0 && (
-                <div className="Search_Results">
-                    {searchResults.map(user => (
-                        <div key={user.id} className="Search_Result_Item">
-                            {user.name} - {user.role}
-                        </div>
-                    ))}
-                </div>
-            )}
-
-<div className='Header_Home'>
+           
+            <div className='Header_Home'>
                 <div className='Students'>
                     <button className='btn_Students' type='button' onClick={handleViewStudents}>
                         <img className='img_Students' src={Student} alt='Students' />
@@ -213,7 +199,30 @@ export function Tasks() {
                         <p className='text_Profile'>Profile</p>
                     </button>
                 </div>
+                
             </div>
+            <div className='Recherche'>
+    <input
+        className='RechercheInput'
+        type='text'
+        placeholder="Rechercher une tâche (titre, description, commentaires)"
+        value={searchTerm}
+        onChange={(e) => handleSearch(e.target.value)}
+    />
+</div>
+
+{searchResults.length > 0 && (
+    <div className="Search_Results">
+        {searchResults.map((task) => (
+            <div key={task.id} className="Task_Card">
+                <h3>{task.titre || "Titre non défini"}</h3>
+                <p><strong>Description :</strong> {task.description || "Pas de description"}</p>
+                <p><strong>Commentaires :</strong> {task.commentaires || "Aucun commentaire"}</p>
+            </div>
+        ))}
+    </div>
+)}
+
             <div className='Home_Information'>
                 <h1>Vos tâches</h1>
                 <div className='Task_Board'>
@@ -228,6 +237,7 @@ export function Tasks() {
                                 {status === "todo" ? "À faire" : status === "inProgress" ? "En cours" : "Terminé"}
                             </h2>
                             <div className='Task_List'>
+                                
                                 {tasks[status].map((task) => (
                                     <div
                                         key={task.id}
@@ -235,23 +245,23 @@ export function Tasks() {
                                         draggable
                                         onDragStart={(e) => handleDragStart(e, task.id, status)}
                                     >
-                                        {task.task}
+                                        <h3>{task.titre || "Titre non défini"}</h3>
+                                        <p><strong>Priorité :</strong> {task.priorite || "Non défini"}</p>
+                                        <p><strong>Description :</strong> {task.description || "Pas de description"}</p>
+                                        <p><strong>Date de création :</strong> {task.createdAt?.toDate()?.toLocaleDateString() || "Non définie"}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     ))}
                 </div>
-
-                {/* Section Ajouter une tâche pour l'Admin */}
                 {userRole === "Admin" && (
-                    <div className='Add_Task_Section'>
-                        <button className='Add_Task_Button' onClick={handleAddTask}>
-                            Ajouter une Tâche
-                        </button>
+                    <div className="Add_Task_Button">
+                        <button onClick={handleAddTask}>Ajouter une tâche</button>
                     </div>
                 )}
             </div>
         </div>
     );
 }
+
