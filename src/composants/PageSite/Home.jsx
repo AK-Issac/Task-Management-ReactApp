@@ -50,6 +50,9 @@ export function Home() {
         navigate('/Teachers'); // Redirige vers la page des enseignants
     };
 
+    const handleFormulaire = () => {
+        navigate('/formulaire'); // Redirige vers la page des enseignants
+    };
     const handleViewProfile = () => {
         navigate('/Profile'); // Redirige vers la page du profil
     };
@@ -90,8 +93,7 @@ export function Home() {
                     <>
                         <h1>Ajoutez un élève ou une tâche pour profiter pleinement de notre site !</h1>
                         <div className='btn_Home'>
-                            <button className='add-student' type='button'>Ajouter un nouvel élève</button>
-                            <button className='add-task' type='button'>Ajouter une nouvelle tâche</button>
+                            <button className='add-task' type='button' onClick={handleFormulaire}>Ajouter une nouvelle tâche</button>
                         </div>
                     </>
                 ) : userRole === 'Community' ? (

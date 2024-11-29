@@ -10,17 +10,16 @@ import { useNavigate } from 'react-router-dom'; // Pour la navigation
 
 export function Teachers() {
     const [users, setUsers] = useState([]);
-    const [lastVisible, setLastVisible] = useState(null); // Pour la pagination
+    const [lastVisible, setLastVisible] = useState(null); // Pagination
     const [userRole, setUserRole] = useState(''); // Rôle de l'utilisateur connecté
     const [loading, setLoading] = useState(true); // État de chargement
     const navigate = useNavigate();
 
-    // Vérification de l'authentification de l'utilisateur
+    // Vérification de l'authentification
     useEffect(() => {
         if (!auth.currentUser) {
-            navigate('/'); // Redirige vers la page de login si l'utilisateur n'est pas authentifié
+            navigate('/'); // Redirection si l'utilisateur n'est pas connecté
         } else {
-            // Vérification du rôle de l'utilisateur connecté
             const fetchUserRole = async () => {
                 const userRef = doc(db, "users", auth.currentUser.uid);
                 const userDoc = await getDoc(userRef);
@@ -32,81 +31,63 @@ export function Teachers() {
         }
     }, [navigate]);
 
-    // Fonction pour récupérer les utilisateurs avec le rôle "Teacher" et pagination
+    // Fonction pour récupérer les enseignants
     const fetchUsers = async () => {
         setLoading(true);
         try {
             const usersRef = collection(db, "users");
-            // Filtrer les utilisateurs ayant le rôle "Teacher" (admin)
-            const q = query(usersRef, orderBy("name"), limit(50)); // Limite à 50 utilisateurs par page
+            const q = query(usersRef, orderBy("name"), limit(50)); // Trier par nom
             const querySnapshot = await getDocs(q);
 
-            // Filtrer par rôle "Teacher" (admin)
             const userList = querySnapshot.docs
                 .map(doc => ({ id: doc.id, ...doc.data() }))
-                .filter(user => user.role === 'Teacher'); // Filtrage des utilisateurs "Teacher"
+                .filter(user => user.role === 'Teacher'); // Filtrer par rôle "Teacher"
 
-            console.log("Utilisateurs récupérés: ", userList); // Pour vérifier les données récupérées
-
+            console.log("Enseignants récupérés :", userList);
             setUsers(userList);
 
-            // Mémoriser le dernier document pour la pagination
             const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
             setLastVisible(lastVisibleDoc);
         } catch (error) {
-            console.error("Erreur de récupération des utilisateurs: ", error);
+            console.error("Erreur lors de la récupération des enseignants :", error);
         } finally {
             setLoading(false);
         }
     };
 
-    // Fonction pour charger plus d'utilisateurs "Teacher"
+    // Charger plus d'enseignants (pagination)
     const loadMoreUsers = async () => {
-        if (!lastVisible) return; // Si aucun document n'est disponible pour la pagination
-
+        if (!lastVisible) return; // Vérification
         setLoading(true);
         try {
             const usersRef = collection(db, "users");
             const q = query(usersRef, orderBy("name"), startAfter(lastVisible), limit(50));
             const querySnapshot = await getDocs(q);
 
-            // Filtrer par rôle "Teacher" (admin)
             const userList = querySnapshot.docs
                 .map(doc => ({ id: doc.id, ...doc.data() }))
-                .filter(user => user.role === 'Teacher'); // Filtrage des utilisateurs "Teacher"
+                .filter(user => user.role === 'Teacher');
 
             setUsers(prevUsers => [...prevUsers, ...userList]);
 
-            // Mettre à jour le dernier document visible
             const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
             setLastVisible(lastVisibleDoc);
         } catch (error) {
-            console.error("Erreur lors du chargement de plus d'utilisateurs: ", error);
+            console.error("Erreur lors du chargement des enseignants :", error);
         } finally {
             setLoading(false);
         }
     };
 
-    // Fonctions de navigation
-    const handleViewStudents = () => {
-        navigate('/Student'); // Redirige vers la page des étudiants
-    };
+    // Navigation entre les pages
+    const handleViewStudents = () => navigate('/Student');
+    const handleViewTasks = () => navigate('/Tasks');
+    const handleViewTeachers = () => navigate('/Teachers');
+    const handleViewProfile = () => navigate('/Profile');
 
-    const handleViewTasks = () => {
-        navigate('/Tasks'); // Redirige vers la page des tâches
-    };
-
-    const handleViewTeachers = () => {
-        navigate('/Teachers'); // Redirige vers la page des enseignants
-    };
-
-    const handleViewProfile = () => {
-        navigate('/Profile'); // Redirige vers la page du profil
-    };
-
-    // Chargement initial des utilisateurs
+    // Chargement initial
     useEffect(() => {
-        fetchUsers(); // Initialiser le chargement des utilisateurs
+        fetchUsers();
     }, []);
 
     return (
@@ -116,25 +97,25 @@ export function Teachers() {
             </div>
             <div className='Header_Home'>
                 <div className='Students'>
-                    <button className='btn_Students' type='button' onClick={handleViewStudents}>
+                    <button className='btn_Students' onClick={handleViewStudents}>
                         <img className='img_Students' src={Student} alt='Students' />
                         <p className='text_Students'>Students</p>
                     </button>
                 </div>
                 <div className='Tasks'>
-                    <button className='btn_Tasks' type='button' onClick={handleViewTasks}>
+                    <button className='btn_Tasks' onClick={handleViewTasks}>
                         <img className='img_Tasks' src={Task} alt='Tasks' />
                         <p className='text_Tasks'>Tasks</p>
                     </button>
                 </div>
                 <div className='Teachers'>
-                    <button className='btn_Teachers' type='button' onClick={handleViewTeachers}>
+                    <button className='btn_Teachers' onClick={handleViewTeachers}>
                         <img className='img_Teachers' src={Teacher} alt='Teachers' />
                         <p className='text_Teachers'>Teachers</p>
                     </button>
                 </div>
                 <div className='Profile'>
-                    <button className='btn_Profile' type='button' onClick={handleViewProfile}>
+                    <button className='btn_Profile' onClick={handleViewProfile}>
                         <img className='img_Profile' src={Profile} alt='Profile' />
                         <p className='text_Profile'>Profile</p>
                     </button>
@@ -142,28 +123,30 @@ export function Teachers() {
             </div>
 
             <div className='Home_Information'>
-                <h1>Utilisateurs "Teacher" (Admins)</h1>
+                <h1>Enseignants</h1>
                 <div className='User_List'>
                     {users.length > 0 ? (
                         users.map(user => (
                             <div key={user.id} className="User_Box">
                                 <h3>{user.name}</h3>
-                                <p>{user.role}</p>
+                                <p>Rôle: {user.role}</p>
                             </div>
                         ))
                     ) : (
-                        <p>Aucun utilisateur trouvé.</p>
+                        <p>Aucun enseignant trouvé.</p>
                     )}
                 </div>
 
-                {/* Bouton pour charger plus d'utilisateurs */}
+                {/* Pagination */}
                 <div className='Pagination'>
                     {loading ? (
                         <p>Chargement...</p>
                     ) : (
-                        <button className="Load_More" onClick={loadMoreUsers}>
-                            Charger plus d'utilisateurs
-                        </button>
+                        lastVisible && (
+                            <button className="Load_More" onClick={loadMoreUsers}>
+                                Charger plus d'enseignants
+                            </button>
+                        )
                     )}
                 </div>
             </div>
