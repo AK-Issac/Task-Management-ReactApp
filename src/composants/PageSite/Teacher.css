@@ -92,7 +92,7 @@ html, body {
 }
 
 .Home_Information {
-    background-image: url("../../assets/FondHome.jpg");
+    /*background-image: url("../../assets/FondHome.jpg");*/
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
