@@ -146,6 +146,22 @@ export function Tasks() {
         }*/
         navigate('/formulaire')
     };
+    // Fonctions de navigation
+    const handleViewStudents = () => {
+        navigate('/Student'); // Redirige vers la page des étudiants
+    };
+
+    const handleViewTasks = () => {
+        navigate('/Tasks'); // Redirige vers la page des tâches
+    };
+
+    const handleViewTeachers = () => {
+        navigate('/Teachers'); // Redirige vers la page des enseignants
+    };
+
+    const handleViewProfile = () => {
+        navigate('/Profile'); // Redirige vers la page du profil
+    };
 
     if (loading) {
         return <div>Loading...</div>; // Affichage de "loading" tant que les données sont en cours de récupération
@@ -172,27 +188,27 @@ export function Tasks() {
                 </div>
             )}
 
-            <div className='Header_Home'>
+<div className='Header_Home'>
                 <div className='Students'>
-                    <button className='btn_Students' type='button'>
+                    <button className='btn_Students' type='button' onClick={handleViewStudents}>
                         <img className='img_Students' src={Student} alt='Students' />
                         <p className='text_Students'>Students</p>
                     </button>
                 </div>
                 <div className='Tasks'>
-                    <button className='btn_Tasks' type='button'>
+                    <button className='btn_Tasks' type='button' onClick={handleViewTasks}>
                         <img className='img_Tasks' src={Task} alt='Tasks' />
                         <p className='text_Tasks'>Tasks</p>
                     </button>
                 </div>
                 <div className='Teachers'>
-                    <button className='btn_Teachers' type='button'>
+                    <button className='btn_Teachers' type='button' onClick={handleViewTeachers}>
                         <img className='img_Teachers' src={Teacher} alt='Teachers' />
                         <p className='text_Teachers'>Teachers</p>
                     </button>
                 </div>
                 <div className='Profile'>
-                    <button className='btn_Profile' type='button'>
+                    <button className='btn_Profile' type='button' onClick={handleViewProfile}>
                         <img className='img_Profile' src={Profile} alt='Profile' />
                         <p className='text_Profile'>Profile</p>
                     </button>

@@ -2,8 +2,8 @@ import './Login.css';
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth, db } from "../../../Firebase"
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
+import { auth, db } from "../../../Firebase";
 import { doc, getDoc } from "firebase/firestore";
 
 export function Login() {
@@ -14,18 +14,11 @@ export function Login() {
     const [captchaVerified, setCaptchaVerified] = useState(false);
 
     const navigate = useNavigate();
+    const googleProvider = new GoogleAuthProvider();
+    const githubProvider = new GithubAuthProvider();
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Empêche le rechargement de la page
-
-        // Validation basique pour l'exemple
-        if (!email || !password) {
-            setErrorMessage("Veuillez remplir tous les champs.");
-        } else {
-            setErrorMessage(""); // Réinitialise le message d'erreur
-            console.log("Connexion avec :", { email, password });
-            // Ajouter ici la logique de connexion (API, Firebase, etc.)
-        }
 
         if (!captchaVerified) {
             setErrorMessage('Veuillez compléter le CAPTCHA');
@@ -64,6 +57,30 @@ export function Login() {
 
     const handleChangeRole = (newRole) => {
         setRole(newRole); // Change le rôle selon le bouton cliqué
+    };
+
+    const handleGoogleLogin = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+            alert(`Bienvenue ${user.displayName}!`);
+            navigate('/home');
+        } catch (err) {
+            console.error(err);
+            setErrorMessage("Erreur lors de la connexion avec Google.");
+        }
+    };
+
+    const handleGithubLogin = async () => {
+        try {
+            const result = await signInWithPopup(auth, githubProvider);
+            const user = result.user;
+            alert(`Bienvenue ${user.displayName || "Utilisateur"}!`);
+            navigate('/home');
+        } catch (err) {
+            console.error(err);
+            setErrorMessage("Erreur lors de la connexion avec GitHub.");
+        }
     };
 
     return (
@@ -129,13 +146,23 @@ export function Login() {
                                     />
                                 </div>
                                 <ReCAPTCHA sitekey="6Lev-ngqAAAAAOel5-0v-SIaJQR8h6UhGFd1PDrP" onChange={handleCaptchaChange} />
-                                <br/>
+                                <br />
                                 <button type="submit" className="btn_submit_Login">Connexion</button>
-
                                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                             </form>
 
-                            <p className='Direction_SignUp'>Première utilisation?<Link to="/inscription"> Cliquez-ici </Link></p>
+                            <div className="social-login">
+                                <button className="btn-google-login" onClick={handleGoogleLogin}>
+                                    Connexion avec Google
+                                </button>
+                                <button className="btn-github-login" onClick={handleGithubLogin}>
+                                    Connexion avec GitHub
+                                </button>
+                            </div>
+
+                            <p className='Direction_SignUp'>
+                                Première utilisation? <Link to="/inscription">Cliquez-ici</Link>
+                            </p>
                         </div>
                     </div>
                 </div>

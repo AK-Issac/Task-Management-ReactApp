@@ -1,0 +1,200 @@
+/* Global Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .Profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: lightgray;
+    height: 100%;
+    padding: 20px;
+  }
+  
+  .box {
+    background-color: white;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    color: royalblue;
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+  }
+  
+  .subtitle {
+    color: midnightblue;
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .notification {
+    background-color: lightblue;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    color: royalblue;
+  }
+  
+  /* Profile Picture */
+  figure.image img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+  
+  /* Form Styles */
+  .input, .file-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin: 10px 0;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: royalblue;
+  }
+  
+  .button {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 5px;
+    background-color: royalblue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 16px;
+  }
+  
+  .button:hover {
+    background-color: lightgray;
+    color: royalblue;
+    transform: scale(1.05);
+  }
+  
+  .button.is-danger {
+    background-color: red;
+  }
+  
+  .button.is-danger:hover {
+    background-color: darkred;
+    color: white;
+  }
+  
+  .button.is-chat {
+    background-color: #4CAF50;
+  }
+  
+  .button.is-chat:hover {
+    background-color: #45a049;
+  }
+  
+  /* Modal/Profile Form Styles */
+  .controlPWD {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .text {
+    font-size: 16px;
+    color: midnightblue;
+    margin-bottom: 5px;
+  }
+  
+  .file-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  /* Buttons - Hover Effects */
+  button:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Logout/Account Delete Button */
+  button.is-warning, button.is-info {
+    margin-top: 10px;
+  }
+  
+  button.is-danger {
+    background-color: #ff4d4d;
+    margin-top: 15px;
+  }
+  
+  /* Profile Section */
+  .Profile-container {
+    background-color: #f5f5f5;
+  }
+  
+  .Profile-container h1 {
+    color: royalblue;
+    font-size: 28px;
+    text-align: center;
+    font-weight: 700;
+  }
+  
+  .Profile-container .button {
+    width: 200px;
+  }
+  
+  .Profile-container .button.is-chat {
+    background-color: #4CAF50;
+  }
+  
+  .Profile-container .button.is-chat:hover {
+    background-color: #45a049;
+  }
+  
+  button.is-primary {
+    margin-top: 20px;
+  }
+  
+  .Profile-container .box {
+    margin-top: 20px;
+  }
+  
+  /* Responsiveness */
+  @media (max-width: 600px) {
+    .Profile-container {
+      padding: 10px;
+    }
+  
+    .box {
+      padding: 20px;
+    }
+  
+    .title {
+      font-size: 28px;
+    }
+  
+    .button {
+      width: 100%;
+      padding: 10px;
+    }
+  }
+  

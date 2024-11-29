@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, orderBy, startAfter, limit, getDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, limit } from 'firebase/firestore';
 import { db, auth } from '../../../Firebase.js'; // Votre fichier de configuration Firebase
 import Student from '../../assets/Student.svg';
 import Teacher from '../../assets/Teacher.svg';
@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom'; // Pour la navigation
 
 export function Students() {
     const [users, setUsers] = useState([]);
-    const [lastVisible, setLastVisible] = useState(null); // Pour la pagination
     const [userRole, setUserRole] = useState(''); // Rôle de l'utilisateur connecté
     const [loading, setLoading] = useState(true); // État de chargement
     const navigate = useNavigate();
@@ -32,27 +31,26 @@ export function Students() {
         }
     }, [navigate]);
 
-    // Fonction pour récupérer les utilisateurs avec le rôle "Community" et pagination
+    // Fonction pour récupérer les utilisateurs avec le rôle "Community"
     const fetchUsers = async () => {
         setLoading(true);
         try {
             const usersRef = collection(db, "users");
-            // Filtrer les utilisateurs ayant le rôle "Community"
-            const q = query(usersRef, orderBy("name"), limit(50)); // Limite à 50 utilisateurs par page
+            // Limiter à 50 utilisateurs par page
+            const q = query(usersRef, limit(50)); 
             const querySnapshot = await getDocs(q);
 
-            // Filtrer par rôle "Community"
+            // Filtrage des utilisateurs ayant le rôle "Community"
             const userList = querySnapshot.docs
                 .map(doc => ({ id: doc.id, ...doc.data() }))
-                .filter(user => user.role === 'Community'); // Filtrage des utilisateurs "Community"
+                .filter(user => {
+                    console.log(user.role); // Vérifiez la valeur du rôle
+                    return user.role === 'Community'; // Filtrage des utilisateurs "Community"
+                });
 
             console.log("Utilisateurs récupérés: ", userList); // Pour vérifier les données récupérées
-
             setUsers(userList);
 
-            // Mémoriser le dernier document pour la pagination
-            const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-            setLastVisible(lastVisibleDoc);
         } catch (error) {
             console.error("Erreur de récupération des utilisateurs: ", error);
         } finally {
@@ -60,31 +58,21 @@ export function Students() {
         }
     };
 
-    // Fonction pour charger plus d'utilisateurs "Community"
-    const loadMoreUsers = async () => {
-        if (!lastVisible) return; // Si aucun document n'est disponible pour la pagination
+    // Fonctions de navigation
+    const handleViewStudents = () => {
+        navigate('/Student'); // Redirige vers la page des étudiants
+    };
 
-        setLoading(true);
-        try {
-            const usersRef = collection(db, "users");
-            const q = query(usersRef, orderBy("name"), startAfter(lastVisible), limit(50));
-            const querySnapshot = await getDocs(q);
+    const handleViewTasks = () => {
+        navigate('/Tasks'); // Redirige vers la page des tâches
+    };
 
-            // Filtrer par rôle "Community"
-            const userList = querySnapshot.docs
-                .map(doc => ({ id: doc.id, ...doc.data() }))
-                .filter(user => user.role === 'Community'); // Filtrage des utilisateurs "Community"
+    const handleViewTeachers = () => {
+        navigate('/Teachers'); // Redirige vers la page des enseignants
+    };
 
-            setUsers(prevUsers => [...prevUsers, ...userList]);
-
-            // Mettre à jour le dernier document visible
-            const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-            setLastVisible(lastVisibleDoc);
-        } catch (error) {
-            console.error("Erreur lors du chargement de plus d'utilisateurs: ", error);
-        } finally {
-            setLoading(false);
-        }
+    const handleViewProfile = () => {
+        navigate('/Profile'); // Redirige vers la page du profil
     };
 
     // Chargement initial des utilisateurs
@@ -99,25 +87,25 @@ export function Students() {
             </div>
             <div className='Header_Home'>
                 <div className='Students'>
-                    <button className='btn_Students' type='button'>
+                    <button className='btn_Students' type='button' onClick={handleViewStudents}>
                         <img className='img_Students' src={Student} alt='Students' />
                         <p className='text_Students'>Students</p>
                     </button>
                 </div>
                 <div className='Tasks'>
-                    <button className='btn_Tasks' type='button'>
+                    <button className='btn_Tasks' type='button' onClick={handleViewTasks}>
                         <img className='img_Tasks' src={Task} alt='Tasks' />
                         <p className='text_Tasks'>Tasks</p>
                     </button>
                 </div>
                 <div className='Teachers'>
-                    <button className='btn_Teachers' type='button'>
+                    <button className='btn_Teachers' type='button' onClick={handleViewTeachers}>
                         <img className='img_Teachers' src={Teacher} alt='Teachers' />
                         <p className='text_Teachers'>Teachers</p>
                     </button>
                 </div>
                 <div className='Profile'>
-                    <button className='btn_Profile' type='button'>
+                    <button className='btn_Profile' type='button' onClick={handleViewProfile}>
                         <img className='img_Profile' src={Profile} alt='Profile' />
                         <p className='text_Profile'>Profile</p>
                     </button>
@@ -130,23 +118,13 @@ export function Students() {
                     {users.length > 0 ? (
                         users.map(user => (
                             <div key={user.id} className="User_Box">
-                                <h3>{user.name}</h3>
-                                <p>{user.role}</p>
+                                <h3>{user.firstName} {user.lastName}</h3> {/* Affiche le prénom et le nom */}
+                                <p>Rôle: {user.role}</p>
+                                <p>Sexe: {user.gender}</p> {/* Affiche le sexe de l'utilisateur */}
                             </div>
                         ))
                     ) : (
                         <p>Aucun utilisateur trouvé.</p>
-                    )}
-                </div>
-
-                {/* Bouton pour charger plus d'utilisateurs */}
-                <div className='Pagination'>
-                    {loading ? (
-                        <p>Chargement...</p>
-                    ) : (
-                        <button className="Load_More" onClick={loadMoreUsers}>
-                            Charger plus d'utilisateurs
-                        </button>
                     )}
                 </div>
             </div>
