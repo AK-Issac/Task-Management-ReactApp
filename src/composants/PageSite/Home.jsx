@@ -59,9 +59,6 @@ export function Home() {
 
     return (
         <div className="App">
-            <div className='Recherche'>
-                <input className='RechercheInput' type='text' placeholder='Search' />
-            </div>
             <div className='Header_Home'>
                 <div className='Students'>
                     <button className='btn_Students' type='button' onClick={handleViewStudents}>
