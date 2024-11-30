@@ -2,17 +2,14 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-body {
-    background-image: url('../../assets/login.jpg');
-    background-size: cover;
-    background-position-x: left;
-    height: 100%;
-    min-height: 300px;
-    margin: 0;
-}
 
 /* Conteneur principal */
 .SignUp_App {
+    background-image: url('../../assets/login.jpg');
+    background-size: cover;
+    background-position-x: left;
+    min-height: 300px;
+    margin: 0;
     display: flex; /* Crée une disposition en ligne */
     justify-content: flex-end; /* Aligne les enfants à droite */
     align-items: stretch; /* Aligne les enfants en hauteur */

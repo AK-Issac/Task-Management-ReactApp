@@ -62,7 +62,6 @@ export function Teachers() {
 
     return (
         <div className="App">
-            
             <div className='Header_Home'>
                 <div className='Students'>
                     <button className='btn_Students' type='button' onClick={() => navigate('/Student')}>
@@ -91,26 +90,38 @@ export function Teachers() {
             </div>
 
             <div className='Home_Information'>
-                <h1>Utilisateurs "Admin"</h1>
+                <h1>Liste des Utilisateurs "Admin"</h1>
                 {loading ? (
                     <p>Chargement...</p>
                 ) : (
-                    <div className='User_List'>
-                        {users.length > 0 ? (
-                            users.map(user => (
-                                <div key={user.id} className="User_Box">
-                                    <h3>{user.firstName} {user.lastName}</h3>
-                                    <p>Rôle: {user.role}</p>
-                                    <p>Sexe: {user.genre}</p>
-                                    <p>Nom: {user.nom}</p>
-                                    <p>Prénom: {user.prenom}</p>
-                                    <p>Email: {user.email}</p>
-                                </div>
-                            ))
-                        ) : (
-                            <p>Aucun utilisateur trouvé.</p>
-                        )}
-                    </div>
+                    <>
+                        {/* Tableau des informations */}
+                        <div className="User_Table">
+                            {/* Titres des colonnes */}
+                            <div className="User_Row titles">
+                                <div className="titles">Nom</div>
+                                <div className="titles">Prénom</div>
+                                <div className="titles">Rôle</div>
+                                <div className="titles">Sexe</div>
+                                <div className="titles">Email</div>
+                            </div>
+
+                            {/* Contenu des colonnes (une ligne par utilisateur) */}
+                            {users.length > 0 ? (
+                                users.map(user => (
+                                    <div className="User_Row" key={user.id}>
+                                        <div className="info">{user.nom}</div>
+                                        <div className="info">{user.prenom}</div>
+                                        <div className="info">{user.role}</div>
+                                        <div className="info">{user.genre}</div>
+                                        <div className="info">{user.email}</div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>Aucun utilisateur trouvé.</p>
+                            )}
+                        </div>
+                    </>
                 )}
             </div>
         </div>

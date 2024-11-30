@@ -62,48 +62,57 @@ export function Students() {
 
     return (
         <div className="App">
-            <div className='Header_Home'>
-                <div className='Students'>
-                    <button className='btn_Students' type='button' onClick={() => navigate('/Student')}>
-                        <img className='img_Students' src={Student} alt='Students' />
-                        <p className='text_Students'>Students</p>
+            <div className="Header_Home">
+                <div className="Students">
+                    <button className="btn_Students" type="button" onClick={() => navigate('/Student')}>
+                        <img className="img_Students" src={Student} alt="Students" />
+                        <p className="text_Students">Students</p>
                     </button>
                 </div>
-                <div className='Tasks'>
-                    <button className='btn_Tasks' type='button' onClick={() => navigate('/Tasks')}>
-                        <img className='img_Tasks' src={Task} alt='Tasks' />
-                        <p className='text_Tasks'>Tasks</p>
+                <div className="Tasks">
+                    <button className="btn_Tasks" type="button" onClick={() => navigate('/Tasks')}>
+                        <img className="img_Tasks" src={Task} alt="Tasks" />
+                        <p className="text_Tasks">Tasks</p>
                     </button>
                 </div>
-                <div className='Teachers'>
-                    <button className='btn_Teachers' type='button' onClick={() => navigate('/Teachers')}>
-                        <img className='img_Teachers' src={Teacher} alt='Teachers' />
-                        <p className='text_Teachers'>Teachers</p>
+                <div className="Teachers">
+                    <button className="btn_Teachers" type="button" onClick={() => navigate('/Teachers')}>
+                        <img className="img_Teachers" src={Teacher} alt="Teachers" />
+                        <p className="text_Teachers">Teachers</p>
                     </button>
                 </div>
-                <div className='Profile'>
-                    <button className='btn_Profile' type='button' onClick={() => navigate('/Profile')}>
-                        <img className='img_Profile' src={Profile} alt='Profile' />
-                        <p className='text_Profile'>Profile</p>
+                <div className="Profile">
+                    <button className="btn_Profile" type="button" onClick={() => navigate('/Profile')}>
+                        <img className="img_Profile" src={Profile} alt="Profile" />
+                        <p className="text_Profile">Profile</p>
                     </button>
                 </div>
             </div>
 
-            <div className='Home_Information'>
-                <h1>Utilisateurs "Community"</h1>
+            <div className="Home_Information">
+                <h1>Liste des Utilisateurs "Community"</h1>
                 {loading ? (
                     <p>Chargement...</p>
                 ) : (
-                    <div className='User_List'>
+                    <div className="User_Table">
+                        {/* Titres des colonnes */}
+                        <div className="User_Row titles">
+                            <div className="titles">Nom</div>
+                            <div className="titles">Prénom</div>
+                            <div className="titles">Rôle</div>
+                            <div className="titles">Sexe</div>
+                            <div className="titles">Email</div>
+                        </div>
+
+                        {/* Contenu des colonnes (une ligne par utilisateur) */}
                         {users.length > 0 ? (
                             users.map(user => (
-                                <div key={user.id} className="User_Box">
-                                    <h3>{user.firstName} {user.lastName}</h3>
-                                    <p>Rôle: {user.role}</p>
-                                    <p>Sexe: {user.genre}</p>
-                                    <p>nom: {user.nom}</p>
-                                    <p>prénom: {user.prenom}</p>
-                                    <p>email: {user.email}</p>
+                                <div className="User_Row" key={user.id}>
+                                    <div className="info">{user.nom}</div>
+                                    <div className="info">{user.prenom}</div>
+                                    <div className="info">{user.role}</div>
+                                    <div className="info">{user.genre}</div>
+                                    <div className="info">{user.email}</div>
                                 </div>
                             ))
                         ) : (

@@ -1,8 +1,10 @@
+/* Général */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
+    font-family: Arial, sans-serif;
 }
 
 .App {
@@ -10,37 +12,10 @@ html, body {
     height: 100%;
     justify-content: center;
     align-items: center;
-    background-color: lightgray;
+    background-color: #ffffff;
 }
 
-.Recherche {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: midnightblue;
-    width: 100%;
-}
-
-.RechercheInput {
-    background-color: inherit;
-    border: none;
-    border-bottom: 1px solid white;
-    color: white;
-    font-family: inherit;
-    font-size: 30px;
-    padding-inline-end: 53px;
-    outline: 0;
-    padding-inline-start: 52px;
-    position: relative;
-    width: 50%;
-    background-image: url("../../assets/Recherche.svg");
-    background-position: right;
-    background-repeat: no-repeat;
-    padding-left: 18px;
-    background-size: 40px;
-    margin: 20px 0;
-}
-
+/* Header */
 .Header_Home {
     width: 100%;
     height: 100%;
@@ -91,20 +66,18 @@ html, body {
     margin-top: 10px;
 }
 
+/* Home Information */
 .Home_Information {
-    /*background-image: url("../../assets/FondHome.jpg");*/
     background-color: #f5f5f5;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     width: 100%;
-    height: 70vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     text-align: center;
     padding-top: 50px;
+    padding-bottom: 20px;
 }
 
 .Home_Information h1 {
@@ -112,61 +85,73 @@ html, body {
     color: midnightblue;
     font-weight: 700;
     margin-bottom: 20px;
-    margin-top: 100px;
 }
 
-.User_List {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+.User_Table {
+    width: 80%;
     margin-top: 20px;
-}
-
-.User_Box {
-    background-color: white;
-    padding: 20px;
-    width: 200px;
-    height: 200px;
+    border-collapse: collapse;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.User_Box h3 {
-    margin: 10px 0;
-    font-size: 18px;
+.User_Row.titles {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.User_Row .titles {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 16px;
     color: royalblue;
 }
 
-.User_Box p {
+.User_Row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    text-align: center;
+}
+
+.User_Row .info {
+    flex: 1;
+    padding: 8px;
     font-size: 14px;
     color: gray;
 }
 
-.Pagination {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
+.User_Row:hover {
+    background-color: #f9f9f9;
 }
 
-.Load_More {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: royalblue;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
+/* Responsivité */
+@media (max-width: 768px) {
+    .Header_Home {
+        flex-direction: column;
+        gap: 20px;
+    }
 
-.Load_More:hover {
-    background-color: lightgray;
-    color: royalblue;
-    transform: scale(1.05);
+    .User_Table {
+        width: 95%;
+    }
+
+    .User_Row {
+        flex-direction: column;
+        text-align: left;
+    }
+
+    .User_Row .info {
+        padding-left: 10px;
+        font-size: 14px;
+    }
+
+    .titles {
+        font-size: 14px;
+    }
 }
