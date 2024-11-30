@@ -92,7 +92,8 @@ html, body {
 }
 
 .Home_Information {
-    background-image: url("../../assets/FondHome.jpg");
+    /*background-image: url("../../assets/FondHome.jpg");*/
+    background-color: #f5f5f5;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -103,7 +104,7 @@ html, body {
     justify-content: flex-start; /* Aligner en haut */
     align-items: center; /* Centrer horizontalement */
     text-align: center;
-    padding-top: 50px; /* Espacement en haut */
+    padding-top: 10%; /* Espacement en haut */
 
 }
 
