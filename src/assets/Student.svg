@@ -1,0 +1,20 @@
+<svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 64 64"
+        fill="none"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        width="64"
+        height="64"
+>
+    <!-- Mortier (chapeau de diplômé) -->
+    <polygon points="32,12 8,20 32,28 56,20 32,12" fill="white" stroke="white"></polygon>
+
+    <!-- Tête -->
+    <circle cx="32" cy="36" r="8" fill="white" stroke="white"></circle>
+
+    <!-- Buste collé à la tête -->
+    <path d="M24,56 C24,48 40,48 40,56" fill="none" stroke="white" stroke-width="2"></path>
+</svg>

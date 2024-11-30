@@ -1,0 +1,114 @@
+/* Réinitialisation globale */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #fffefe;
+}
+
+/* Conteneur principal */
+.App {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Header avec navigation */
+.Header_Home {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: royalblue;
+    color: white;
+    gap: 50px;
+    padding: 20px 0;
+}
+
+/* Section principale des informations */
+.Home_Information {
+    background-color: white;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.Home_Information h1 {
+    font-size: 24px;
+    color: midnightblue;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Liste des utilisateurs */
+.User_Table {
+    display: flex;
+    flex-direction: column; /* Les éléments (lignes d'utilisateurs) sont organisés verticalement */
+    gap: 10px;
+    width: 100%;
+    max-width: 800px; /* Limite la largeur du tableau */
+    padding: 10px 0;
+    box-sizing: border-box;
+    align-items: center; /* Centrer le contenu */
+}
+
+/* Titres des colonnes (affichage horizontal) */
+.User_Row.titles {
+    display: flex;
+    flex-direction: row; /* Les titres sont alignés horizontalement */
+    gap: 20px; /* Espacement entre les titres */
+    width: 100%;
+    max-width: 800px; /* Limite la largeur des titres */
+    padding: 10px;
+    background-color: #f0f0f0; /* Fond gris clair pour les titres */
+    font-weight: bold;
+    text-align: center; /* Aligner le texte des titres au centre */
+    border-radius: 5px;
+}
+
+/* Titres des colonnes */
+.titles {
+    flex: 1; /* Chaque titre occupe une largeur équivalente */
+    padding: 10px;
+    font-size: 16px;
+    color: royalblue;
+    border-right: 1px solid #ddd; /* Bordure pour séparer les colonnes */
+}
+
+.titles:last-child {
+    border-right: none; /* Enlever la bordure sur la dernière colonne */
+}
+
+/* Informations des utilisateurs */
+.info {
+    font-size: 14px;
+    color: black;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Une ligne pour chaque utilisateur */
+.User_Row {
+    display: flex;
+    flex-direction: row; /* Les informations sont alignées horizontalement dans la même ligne */
+    gap: 20px; /* Espacement entre les informations */
+    width: 100%;
+    max-width: 800px; /* Limite la largeur de la ligne */
+    padding: 10px;
+    border: 1px solid #ddd; /* Bordure pour chaque ligne */
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Style pour chaque colonne dans la ligne */
+.User_Row .info {
+    flex: 1; /* Chaque élément de la ligne occupe la même largeur */
+}

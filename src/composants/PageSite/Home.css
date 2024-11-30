@@ -1,0 +1,138 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.App {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.Recherche {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: midnightblue;
+  width: 100%;
+}
+
+.RechercheInput {
+  background-color: inherit;
+  border: none;
+  border-bottom: 1px solid white;
+  color: white;
+  font-family: inherit;
+  font-size: 30px;
+  padding-inline-end: 53px;
+  outline: 0;
+  padding-inline-start: 52px;
+  position: relative;
+  width: 50%;
+  background-image: url("../../assets/Recherche.svg");
+  background-position: right;
+  background-repeat: no-repeat;
+  padding-left: 18px;
+  background-size: 40px;
+  margin: 20px 0;
+}
+
+.Header_Home {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: royalblue;
+  color: white;
+  font-family: inherit;
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  gap: 75px;
+}
+
+.Students, .Tasks, .Teachers, .Profile {
+  margin: 0;
+}
+
+.btn_Students, .btn_Tasks, .btn_Teachers, .btn_Profile {
+  width: 100px;
+  height: 100px;
+  border: none;
+  background-color: royalblue;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn_Students:hover, .btn_Tasks:hover, .btn_Teachers:hover, .btn_Profile:hover {
+  background-color: lightgray;
+  color: royalblue;
+  transform: scale(1.1);
+}
+
+.img_Students, .img_Tasks, .img_Teachers, .img_Profile {
+  width: 50px;
+  height: 50px;
+}
+
+.text_Students, .text_Tasks, .text_Teachers, .text_Profile {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.Home_Information {
+  /*background-image: url("../../assets/FondHome.jpg");*/
+  background-color: #f5f5f5;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  flex-direction: column; /* Direction verticale */
+  justify-content: flex-start; /* Aligner en haut */
+  align-items: center; /* Centrer horizontalement */
+  text-align: center;
+  padding-top: 50px; /* Espacement en haut */
+
+}
+
+.Home_Information h1 {
+  font-size: 36px;
+  color: midnightblue;
+  font-weight: 700;
+  margin-bottom: 20px; /* Réduire l'espacement sous le titre */
+  margin-top: 100px;
+}
+
+.btn_Home {
+  display: flex;
+  gap: 20px;
+}
+
+.add-student, .add-task {
+  padding: 15px 30px;
+  font-size: 18px;
+  background-color: royalblue;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.add-student:hover, .add-task:hover {
+  background-color: midnightblue;
+  transform: scale(1.05);
+}
