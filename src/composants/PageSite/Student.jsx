@@ -38,8 +38,8 @@ export function Students() {
         try {
             const usersRef = collection(db, "users");
             // Filtrer les utilisateurs ayant le rôle "Community"
-            const q = query(usersRef, orderBy("name"), limit(50)); // Limite à 50 utilisateurs par page
-            const querySnapshot = await getDocs(q);
+            //const q = query(usersRef, orderBy("name"), limit(50)); // Limite à 50 utilisateurs par page
+            const querySnapshot = await getDocs(usersRef);
 
             // Filtrer par rôle "Community"
             const userList = querySnapshot.docs
@@ -125,7 +125,7 @@ export function Students() {
             </div>
 
             <div className='Home_Information'>
-                <h1>Utilisateurs "Community"</h1>
+                <h1>Utilisateurs Éleves</h1>
                 <div className='User_List'>
                     {users.length > 0 ? (
                         users.map(user => (
